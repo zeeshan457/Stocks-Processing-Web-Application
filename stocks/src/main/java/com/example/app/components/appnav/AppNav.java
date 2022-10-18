@@ -20,13 +20,12 @@ import java.util.Optional;
 public class AppNav extends Component implements HasSize, HasStyle {
 
     /**
-     * Creates a new menu without any label.
+     * Creates a new menu.
      */
     public AppNav() {
     }
 
     /**
-     * Creates a new menu with the given label.
      *
      * @param label
      *            the label to use
@@ -52,11 +51,8 @@ public class AppNav extends Component implements HasSize, HasStyle {
 
     /**
      * Removes the menu item from the menu.
-     * <p>
-     * If the given menu item is not a child of this menu, does nothing.
      *
      * @param appNavItem
-     *            the menu item to remove
      * @return the menu for chaining
      */
     public AppNav removeItem(AppNavItem appNavItem) {
@@ -69,7 +65,6 @@ public class AppNav extends Component implements HasSize, HasStyle {
     }
 
     /**
-     * Removes all menu items from this item.
      *
      * @return this item for chaining
      */
@@ -88,10 +83,6 @@ public class AppNav extends Component implements HasSize, HasStyle {
     }
 
     /**
-     * Set a textual label for the navigation.
-     * <p>
-     * This can help the end user to distinguish groups of navigation items. The
-     * label is also available for screen reader users.
      *
      * @param label
      *            the label to set
@@ -116,10 +107,6 @@ public class AppNav extends Component implements HasSize, HasStyle {
     }
 
     /**
-     * Check if the end user is allowed to collapse/hide and expand/show the
-     * navigation items.
-     * <p>
-     * NOTE: The navigation has to have a label for it to be collapsible.
      *
      * @return true if the menu is collapsible, false otherwise
      */
@@ -128,13 +115,10 @@ public class AppNav extends Component implements HasSize, HasStyle {
     }
 
     /**
-     * Allow the end user to collapse/hide and expand/show the navigation items.
-     * <p>
+
      * NOTE: The navigation has to have a label for it to be collapsible.
      *
      * @param collapsible
-     *            true to make the whole navigation component collapsible, false
-     *            otherwise
      * @return this instance for chaining
      */
     public AppNav setCollapsible(boolean collapsible) {

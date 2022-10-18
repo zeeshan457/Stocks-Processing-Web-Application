@@ -1,12 +1,12 @@
-package com.example.app.views;
+package com.example.app.Views;
 
 
 import com.example.app.components.appnav.AppNav;
 import com.example.app.components.appnav.AppNavItem;
-import com.example.app.views.about.AboutView;
-import com.example.app.views.home.HomeView;
-import com.example.app.views.processing.ProcessingView;
-import com.example.app.views.viewstocks.ViewStocksView;
+import com.example.app.Views.about.AboutView;
+import com.example.app.Views.home.HomeView;
+import com.example.app.Views.processing.ProcessingView;
+import com.example.app.Views.viewstocks.ViewStocksView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Footer;
@@ -41,7 +41,7 @@ public class MainLayout extends AppLayout {
     }
 
     private void addDrawerContent() {
-        H1 appName = new H1("Stocks");
+        H1 appName = new H1("Stocks Application");
         appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
         Header header = new Header(appName);
 
