@@ -1,4 +1,4 @@
-FINAL YEAR PROJECT - This project was my proposal, and it was accepted by the supervisor.
+# FINAL YEAR PROJECT - This project was my proposal, and it was accepted by the supervisor.
 
 Author Zeeshan Mahmood Date 08/10/2022
 
