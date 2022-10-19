@@ -3,10 +3,10 @@ package com.example.app.Views;
 
 import com.example.app.components.appnav.AppNav;
 import com.example.app.components.appnav.AppNavItem;
-import com.example.app.Views.about.AboutView;
-import com.example.app.Views.home.HomeView;
-import com.example.app.Views.processing.ProcessingView;
-import com.example.app.Views.viewstocks.ViewStocksView;
+import com.example.app.Views.About.AboutView;
+import com.example.app.Views.Home.HomeView;
+import com.example.app.Views.Processing.ProcessingView;
+import com.example.app.Views.ViewStocks.ViewStocksView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Footer;
