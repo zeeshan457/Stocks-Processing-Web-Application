@@ -12,17 +12,18 @@ import com.vaadin.flow.router.Route;
 @Route(value = "Processing", layout = MainLayout.class)
 public class ProcessingView extends VerticalLayout {
 
+    // Attributes
+    H2 Stocks_Title = new H2("Process your stocks here");
+    ComboBox stock_options = new ComboBox<>("Select Stocks");
+    ComboBox Algo_options = new ComboBox<>("Select Algorithm");
+
     public ProcessingView() {
         setSpacing(false);
-        H2 Stocks_Title = new H2("Process your stocks here");
-        ComboBox stock_options = new ComboBox<>("Select Stocks");
-        ComboBox Algo_options = new ComboBox<>("Select Algorithm");
-
-        // Add components here
+        // Add components
         add(stock_options);
         add(Algo_options);
 
-
+        // Configs
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.START);
         setDefaultHorizontalComponentAlignment(Alignment.START);

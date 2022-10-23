@@ -1,4 +1,4 @@
-package com.example.app.Data;
+package com.example.app.Data.Stock;
 
 import com.vaadin.flow.component.notification.Notification;
 import org.springframework.stereotype.Service;

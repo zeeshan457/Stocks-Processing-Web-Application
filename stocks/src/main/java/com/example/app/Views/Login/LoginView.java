@@ -12,6 +12,10 @@ import com.vaadin.flow.router.Route;
 @Route(value = "Login")
 public class LoginView extends Composite<LoginOverlay> {
 
+    // Attributes
+    String username;
+    String password;
+
     // Constructor
     public LoginView() {
     LoginOverlay login = getContent();
