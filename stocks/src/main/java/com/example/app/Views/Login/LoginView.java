@@ -22,6 +22,7 @@ public class LoginView extends Composite<LoginOverlay> {
     login.setTitle("Stocks Application");
     login.setDescription(null);
     login.setForgotPasswordButtonVisible(false);
+//    login.setError(true);
     login.setOpened(true);
 
 login.addLoginListener(event -> {
@@ -33,9 +34,5 @@ login.addLoginListener(event -> {
         Notification.show("Username or Password is incorrect");
     }
 });
-
-
-
-
     }
 }
