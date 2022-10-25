@@ -1,25 +1,22 @@
 package com.example.app.Data.Entity;
 
 import com.example.app.Data.Role;
-import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.*;
+import org.hibernate.Hibernate;
 import javax.persistence.*;
+import java.util.Objects;
+import java.util.Set;
 
-// Annotations for this class
+// Annotations for this class using Lombok
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
 @Table(name = "users")
-public class User {
+public class User extends AbstractEntity{
 
     // Entities for the table
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, length = 50)
     private String username;
 
     @Column(nullable = false, length = 50)
@@ -30,8 +27,6 @@ public class User {
     @Column(nullable = false, length = 50)
     private Set<Role> roles;
 
-
-    // Non args constructor
     public User() {
     }
 }

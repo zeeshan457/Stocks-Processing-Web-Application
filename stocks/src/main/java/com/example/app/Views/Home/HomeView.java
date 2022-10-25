@@ -20,26 +20,30 @@ import com.vaadin.flow.router.RouteAlias;
 @RouteAlias(value = "", layout = MainLayout.class)
 public class HomeView extends VerticalLayout {
 
-    // Attributes
-    private H1 Ttile = new H1("Welcome to the Stocks Application");
-    private Image HomeImage = new Image("images/stockgif.gif", "stock image");
-    private Paragraph Information = new Paragraph("The stocks application is a platform that enables users to view stocks, " +
-                                                  "and process them in a way, which is very user friendly 🤗");
-
-    // Constructor
+    // Constructor and calling method here
     public HomeView() {
         setSpacing(false);
-        HomeImage.setWidth("200px");
-        // Adding components
-        add(HomeImage);
-        add(Ttile);
-        add(Information);
-
+        addHome();
         // Configs
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         getStyle().set("text-align", "center");
     }
+
+    public void addHome() {
+        H1 Title = new H1("Welcome to the Stocks Application");
+        Image HomeImage = new Image("images/stockgif.gif", "stock image");
+        Paragraph Information = new Paragraph("The stocks application is a platform that enables users to view stocks, " +
+                "and process them in a way, which is very user friendly 🤗");
+        HomeImage.setWidth("200px");
+        // Adding components
+        add(HomeImage);
+        add(Title);
+        add(Information);
+    }
+
+
+
 
 }
