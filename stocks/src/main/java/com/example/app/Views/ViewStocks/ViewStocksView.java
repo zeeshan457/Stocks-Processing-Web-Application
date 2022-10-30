@@ -40,9 +40,7 @@ public class ViewStocksView extends VerticalLayout {
         ButtonLayout.addAndExpand(ShowButton);
 
         // Add components here
-        add(Options);
-        add(ButtonLayout);
-        add(grid);
+        add(Options, ButtonLayout, grid);
 
         // Configs
         setSizeFull();
