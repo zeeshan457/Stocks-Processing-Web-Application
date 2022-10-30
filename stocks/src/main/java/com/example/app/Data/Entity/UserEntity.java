@@ -6,21 +6,18 @@ import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 // Annotations for this class using Lombok
 @Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Getter
 @Setter
 @Table(name = "users")
-public class UserEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, length = 20)
-    @Type(type="int")
-    private int id;
+public class UserEntity extends AbstractEntity{
 
     // Entities for the table
     @Column(nullable = false, length = 50)
@@ -30,14 +27,9 @@ public class UserEntity {
     private String password;
 
     @Column(nullable = false, length = 50)
-    private String roles;
+    @Enumerated(EnumType.STRING)
+    private Role roles;
 
-    public UserEntity(int id, String username, String password, String roles) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-    }
 }
 
 

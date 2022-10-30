@@ -1,7 +1,7 @@
 package com.example.app.Views.Login;
 
 import com.example.app.Data.Authenticate.AuthService;
-import com.example.app.Data.Login.UserRepository;
+import com.example.app.Data.Repository.UserRepository;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H2;

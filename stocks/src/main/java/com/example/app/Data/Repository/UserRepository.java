@@ -1,4 +1,4 @@
-package com.example.app.Data.Login;
+package com.example.app.Data.Repository;
 
 import com.example.app.Data.Entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,5 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
-     UserEntity findByUsername(String username);
+    <S extends UserEntity> S save(String username, String password);
+
+    UserEntity findByUsername(String username);
 }
