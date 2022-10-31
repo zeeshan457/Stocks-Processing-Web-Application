@@ -20,8 +20,8 @@ public class UserRepositoryTest {
     // TEST HAS PASSED
     @Test
     public void TestRegister() throws Exception {
-        UserEntity user1 = new UserEntity("Alice", "12345", Role.USER);
-        UserEntity user2 = new UserEntity("Bob", "12345", Role.USER);
+        UserEntity user1 = new UserEntity("Admin", "12345", Role.ADMIN);
+        UserEntity user2 = new UserEntity("User", "12345", Role.USER);
         //save user, verify has ID value after save
         this.repo.save(user1);
         this.repo.save(user2);

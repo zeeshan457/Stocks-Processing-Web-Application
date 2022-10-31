@@ -9,10 +9,12 @@ import com.example.app.Views.Processing.ProcessingView;
 import com.example.app.Views.ViewStocks.ViewStocksView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
@@ -54,12 +56,13 @@ public class MainLayout extends AppLayout {
         // AppNav is not yet an official component.
         // For documentation, visit https://github.com/vaadin/vcf-nav#readme
         AppNav nav = new AppNav();
+        Button logout = new Button("Log out");
 
         nav.addItem(new AppNavItem("Home", HomeView.class, "la la-globe"));
         nav.addItem(new AppNavItem("View Stocks", ViewStocksView.class, "la la-columns"));
         nav.addItem(new AppNavItem("Processing", ProcessingView.class, "la la-code-branch"));
         nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
-
+        nav.addItem(new AppNavItem("Logout"));
         return nav;
     }
 

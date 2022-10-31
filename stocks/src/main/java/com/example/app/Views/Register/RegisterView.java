@@ -1,12 +1,14 @@
 package com.example.app.Views.Register;
 
 import com.example.app.Data.Authenticate.AuthService;
+import com.example.app.Data.Repository.UserRepository;
 import com.example.app.Data.Validation.Validation;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -14,9 +16,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import lombok.Getter;
-
-import javax.security.auth.message.AuthException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 // Annotations for this class
 @AnonymousAllowed
@@ -24,8 +24,11 @@ import javax.security.auth.message.AuthException;
 @Route(value = "Register")
 public class RegisterView extends VerticalLayout {
 
+
     // Attributes
-    private final AuthService service = new AuthService();
+    @Autowired
+    private AuthService service;
+
     private final Validation validate = new Validation();
     private H2 Title;
     private TextField username;
@@ -44,20 +47,17 @@ public class RegisterView extends VerticalLayout {
 
         // RegisterButton action Listener and calling services/validation from specific packages.
         RegisterButton.addClickListener(event -> {
-            try {
-                if (validate.RegisterValidation(username.getValue(), password1.getValue(), password2.getValue())) {
-                    service.Register(username.getValue(), password1.getValue());
-                    Notification.show("Registration Success");
-                    UI.getCurrent().navigate("Login");
-                }
-            } catch (AuthException e) {
-                throw new RuntimeException(e);
+            if (validate.RegisterValidation(username.getValue(), password1.getValue(), password2.getValue())) {
+                service.Register(username.getValue(), password1.getValue());
+                Notification registerMessage = Notification.show("Registration Success");
+                registerMessage.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                UI.getCurrent().navigate("Login");
             }
         });
     }
 
     public void AddRegister() {
-        Title = new H2("Registration");
+        Title = new H2("Register");
         username = new TextField("Username");
         password1 = new PasswordField("Password");
         password2 = new PasswordField("Confirm password");
