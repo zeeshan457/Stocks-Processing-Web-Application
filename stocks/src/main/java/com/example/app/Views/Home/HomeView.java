@@ -12,7 +12,6 @@ import com.vaadin.flow.router.RouteAlias;
 
 @PageTitle("Home")
 @Route(value = "Home", layout = MainLayout.class)
-@RouteAlias(value = "", layout = MainLayout.class)
 public class HomeView extends VerticalLayout {
 
     // Constructor and calling method here
@@ -36,6 +35,5 @@ public class HomeView extends VerticalLayout {
             add(HomeImage);
             add(Title);
             add(Information);
-
     }
 }

@@ -1,7 +1,6 @@
 package com.example.app.Views.Register;
 
-import com.example.app.Data.Authenticate.AuthService;
-import com.example.app.Data.Repository.UserRepository;
+import com.example.app.Data.Service.AuthService;
 import com.example.app.Data.Validation.Validation;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -10,6 +9,7 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -35,6 +35,8 @@ public class RegisterView extends VerticalLayout {
     private PasswordField password1;
     private PasswordField password2;
     private Button RegisterButton;
+    private Button BackButton;
+    HorizontalLayout layout = new HorizontalLayout();
 
     // Constructor and method call
     public RegisterView() {
@@ -54,6 +56,9 @@ public class RegisterView extends VerticalLayout {
                 UI.getCurrent().navigate("Login");
             }
         });
+        BackButton.addClickListener(event -> {
+            UI.getCurrent().navigate("Menu");
+        });
     }
 
     public void AddRegister() {
@@ -61,9 +66,13 @@ public class RegisterView extends VerticalLayout {
         username = new TextField("Username");
         password1 = new PasswordField("Password");
         password2 = new PasswordField("Confirm password");
+        BackButton = new Button("Return");
         RegisterButton = new Button("Register");
         RegisterButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        RegisterButton.setWidth("210px");
-        add(Title, username, password1, password2, RegisterButton);
+        RegisterButton.setWidth("100px");
+        BackButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        BackButton.setWidth("100px");
+        layout.add(BackButton, RegisterButton);
+        add(Title, username, password1, password2, layout);
     }
 }

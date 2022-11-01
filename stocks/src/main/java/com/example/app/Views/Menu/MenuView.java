@@ -1,6 +1,7 @@
 package com.example.app.Views.Menu;
 
 
+import com.example.app.Views.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -10,6 +11,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import java.awt.*;
@@ -18,6 +20,7 @@ import java.awt.*;
 @AnonymousAllowed
 @PageTitle("Menu Page")
 @Route(value = "Menu")
+@RouteAlias(value = "")
 public class MenuView extends VerticalLayout {
 
     // Attributes

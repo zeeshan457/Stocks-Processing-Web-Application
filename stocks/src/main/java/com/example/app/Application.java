@@ -21,8 +21,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @PWA(name = "Stocks", shortName = "Stocks", offlineResources = {})
 @NpmPackage(value = "line-awesome", version = "1.3.0")
 @NpmPackage(value = "@vaadin-component-factory/vcf-nav", version = "1.0.6")
-//@EnableJpaRepositories("com.example.app.Data.Repository")
-//@EntityScan("com.example.app.Data.Entity")
 
 public class Application implements AppShellConfigurator {
     public static void main(String[] args) {

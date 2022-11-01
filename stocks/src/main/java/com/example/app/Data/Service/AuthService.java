@@ -1,4 +1,4 @@
-package com.example.app.Data.Authenticate;
+package com.example.app.Data.Service;
 
 import com.example.app.Data.Entity.UserEntity;
 import com.example.app.Data.Repository.UserRepository;
@@ -8,11 +8,7 @@ import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.security.auth.message.AuthException;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 
 @Service
 public class AuthService {
@@ -23,7 +19,7 @@ public class AuthService {
 
     public void Login(String username, String password) throws AuthException {
         UserEntity user = repo.findByUsername(username);
-        if (user != null) {
+        if (user != null && user.getPassword().equals(password)) {
             VaadinSession.getCurrent().setAttribute(UserEntity.class, user);
         } else {
             throw new AuthException();

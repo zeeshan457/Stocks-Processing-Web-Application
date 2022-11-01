@@ -1,10 +1,13 @@
 package com.example.app.Views;
 
 
+import com.example.app.Views.Login.LoginView;
+import com.example.app.Views.Logout.LogoutView;
 import com.example.app.components.appnav.AppNav;
 import com.example.app.components.appnav.AppNavItem;
 import com.example.app.Views.About.AboutView;
 import com.example.app.Views.Home.HomeView;
+import com.example.app.Views.Logout.LogoutView;
 import com.example.app.Views.Processing.ProcessingView;
 import com.example.app.Views.ViewStocks.ViewStocksView;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -62,7 +65,7 @@ public class MainLayout extends AppLayout {
         nav.addItem(new AppNavItem("View Stocks", ViewStocksView.class, "la la-columns"));
         nav.addItem(new AppNavItem("Processing", ProcessingView.class, "la la-code-branch"));
         nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
-        nav.addItem(new AppNavItem("Logout"));
+        nav.addItem(new AppNavItem("Logout", LoginView.class));
         return nav;
     }
 
