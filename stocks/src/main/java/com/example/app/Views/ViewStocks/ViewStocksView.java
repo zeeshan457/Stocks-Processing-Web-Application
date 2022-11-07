@@ -2,6 +2,7 @@ package com.example.app.Views.ViewStocks;
 
 import com.example.app.Data.Stock.Stock;
 import com.example.app.Views.MainLayout;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
@@ -28,19 +29,15 @@ public class ViewStocksView extends VerticalLayout {
     // Constructor
     public ViewStocksView() {
         setSpacing(true);
-        // Table to display stock data
-        Grid<Stock> grid = new Grid<>(Stock.class, false);
-        grid.addColumn(Stock::getCurrency).setHeader("Currency");
-        grid.addColumn(Stock::getPrice).setHeader("Price");
-        grid.addColumn(Stock::getExchange).setHeader("Exchange");
-        grid.addColumn(Stock::getVolume).setHeader("Volume");
+        addGrid();
 
-        HorizontalLayout ButtonLayout = new HorizontalLayout();
-        ButtonLayout.addAndExpand(ClearButton);
-        ButtonLayout.addAndExpand(ShowButton);
+        ShowButton.addClickListener(event -> {
+            UI.getCurrent().navigate("Menu");
+        });
 
-        // Add components here
-        add(Options, ButtonLayout, grid);
+        ClearButton.addClickListener(event -> {
+            UI.getCurrent().navigate("Menu");
+        });
 
         // Configs
         setSizeFull();
@@ -49,4 +46,19 @@ public class ViewStocksView extends VerticalLayout {
         getStyle().set("text-align", "center");
     }
 
+
+    public void addGrid() {
+        // Table to display stock data
+        Grid<Stock> grid = new Grid<>(Stock.class, false);
+        grid.addColumn(Stock::getDate).setHeader("Date");
+        grid.addColumn(Stock::getOpen).setHeader("Open");
+        grid.addColumn(Stock::getClose).setHeader("Close");
+        grid.addColumn(Stock::getHigh).setHeader("High");
+        grid.addColumn(Stock::getLow).setHeader("Low");
+        HorizontalLayout ButtonLayout = new HorizontalLayout();
+        ButtonLayout.addAndExpand(ClearButton);
+        ButtonLayout.addAndExpand(ShowButton);
+        // Add components here
+        add(Options, ButtonLayout, grid);
+    }
 }

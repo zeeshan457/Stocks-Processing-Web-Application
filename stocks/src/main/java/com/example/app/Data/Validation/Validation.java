@@ -29,12 +29,13 @@ public class Validation {
             Notification error = Notification.show("One or more field are empty");
             error.addThemeVariants(NotificationVariant.LUMO_ERROR);
             return false;
-        } else if (username.length() < 5 || password1.length() < 5) {
-            Notification error = Notification.show("The username or password must be more than 5 characters");
-            error.addThemeVariants(NotificationVariant.LUMO_ERROR);
-            return false;
-
         }
+//        } else if (username.length() < 5 || password1.length() < 5) {
+//            Notification error = Notification.show("The username or password must be more than 5 characters");
+//            error.addThemeVariants(NotificationVariant.LUMO_ERROR);
+//            return false;
+//
+//        }
         return true;
     }
 

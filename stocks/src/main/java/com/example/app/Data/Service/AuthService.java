@@ -13,7 +13,7 @@ import javax.security.auth.message.AuthException;
 @Service
 public class AuthService {
 
-    // Attributes injecting repository here
+    // injecting repository here
     @Autowired
     private UserRepository repo;
 

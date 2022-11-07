@@ -3,6 +3,7 @@ package com.example.app.Views;
 
 import com.example.app.Views.Login.LoginView;
 import com.example.app.Views.Logout.LogoutView;
+import com.example.app.Views.ManageStocks.ManageStocksView;
 import com.example.app.components.appnav.AppNav;
 import com.example.app.components.appnav.AppNavItem;
 import com.example.app.Views.About.AboutView;
@@ -63,6 +64,7 @@ public class MainLayout extends AppLayout {
 
         nav.addItem(new AppNavItem("Home", HomeView.class, "la la-globe"));
         nav.addItem(new AppNavItem("View Stocks", ViewStocksView.class, "la la-columns"));
+        nav.addItem(new AppNavItem("Manage", ManageStocksView.class, "la la-columns"));
         nav.addItem(new AppNavItem("Processing", ProcessingView.class, "la la-code-branch"));
         nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
         nav.addItem(new AppNavItem("Logout", LoginView.class));

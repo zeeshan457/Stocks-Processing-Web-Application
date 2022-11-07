@@ -6,6 +6,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -28,7 +29,6 @@ public class RegisterView extends VerticalLayout {
     // Attributes
     @Autowired
     private AuthService service;
-
     private final Validation validate = new Validation();
     private H2 Title;
     private TextField username;
@@ -38,16 +38,14 @@ public class RegisterView extends VerticalLayout {
     private Button BackButton;
     HorizontalLayout layout = new HorizontalLayout();
 
-    // Constructor and method call
+    // Constructor and method calls
     public RegisterView() {
         AddRegister();
-        // Configs
-        setSizeFull();
-        setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-        setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
-        getStyle().set("text-align", "center");
+        actionEvents();
+    }
 
-        // RegisterButton action Listener and calling services/validation from specific packages.
+    // RegisterButton action Listener and calling services/validation from specific packages.
+    public void actionEvents() {
         RegisterButton.addClickListener(event -> {
             if (validate.RegisterValidation(username.getValue(), password1.getValue(), password2.getValue())) {
                 service.Register(username.getValue(), password1.getValue());
@@ -61,18 +59,24 @@ public class RegisterView extends VerticalLayout {
         });
     }
 
+    // creating the register fields here
     public void AddRegister() {
         Title = new H2("Register");
         username = new TextField("Username");
         password1 = new PasswordField("Password");
         password2 = new PasswordField("Confirm password");
-        BackButton = new Button("Return");
-        RegisterButton = new Button("Register");
+        BackButton = new Button("Back", VaadinIcon.ARROW_BACKWARD.create());
+        RegisterButton = new Button("Register", VaadinIcon.SIGN_IN.create());
         RegisterButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        RegisterButton.setWidth("100px");
+        RegisterButton.setWidth("115px");
         BackButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        BackButton.setWidth("100px");
+        BackButton.setWidth("80px");
         layout.add(BackButton, RegisterButton);
         add(Title, username, password1, password2, layout);
+        // Configs
+        setSizeFull();
+        setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+        getStyle().set("text-align", "center");
     }
 }
