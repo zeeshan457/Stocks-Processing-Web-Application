@@ -32,11 +32,11 @@ public class ViewStocksView extends VerticalLayout {
         addGrid();
 
         ShowButton.addClickListener(event -> {
-            UI.getCurrent().navigate("Menu");
+//            UI.getCurrent().navigate("Menu");
         });
 
         ClearButton.addClickListener(event -> {
-            UI.getCurrent().navigate("Menu");
+//            UI.getCurrent().navigate("Menu");
         });
 
         // Configs
