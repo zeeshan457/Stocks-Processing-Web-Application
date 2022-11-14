@@ -2,6 +2,7 @@ package com.example.app.Views.ManageStocks;
 
 import com.example.app.Data.Entity.StocksEntity;
 import com.example.app.Data.Service.StockService;
+import com.example.app.Data.Stock.Stock;
 import com.example.app.Data.Validation.Validation;
 import com.example.app.Views.MainLayout;
 import com.vaadin.flow.component.UI;
@@ -21,6 +22,7 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -77,8 +79,7 @@ public class ManageStocksView extends VerticalLayout {
         // Method calls to display components
         Editor(splitLayout);
         splitLayout.setSizeFull();
-        splitLayout.setWidth("600px");
-        refresh.setWidth("1000px");
+        splitLayout.setWidth("700px");
         refresh.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         add(grid);
         layout.addAndExpand(refresh);
@@ -96,7 +97,8 @@ public class ManageStocksView extends VerticalLayout {
     public void Editor(SplitLayout layout) {
         // Binders
         binder = new BeanValidationBinder<>(StocksEntity.class);
-        binder.bindInstanceFields(this);
+
+
         HorizontalLayout ButtonLayout = new HorizontalLayout();
         HorizontalLayout ButtonLayout2 = new HorizontalLayout();
         HorizontalLayout Main = new HorizontalLayout();
@@ -108,11 +110,11 @@ public class ManageStocksView extends VerticalLayout {
         information = new TextField("Information");
         symbol2 = new TextField("Symbol");
         information2 = new TextField("Information");
-        save = new Button("Save");
+        save = new Button("Save",VaadinIcon.EDIT.create());
         cancel = new Button("Cancel");
-        delete  =new Button("Delete");
+        delete  =new Button("Delete",VaadinIcon.TRASH.create());
         cancel2 = new Button("Cancel");
-        add = new Button("New Item");
+        add = new Button("New Item", VaadinIcon.PLUS.create());
         delete2  =new Button("Delete");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         cancel.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -120,12 +122,12 @@ public class ManageStocksView extends VerticalLayout {
         add.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         cancel2.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete2.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_ERROR);
-        formEdit.setWidth("265px");
-        formAdd.setWidth("265px");
-        ButtonLayout.setWidth("265px");
+        formEdit.setWidth("310px");
+        formAdd.setWidth("310px");
+        ButtonLayout.setWidth("310px");
         ButtonLayout.setJustifyContentMode(JustifyContentMode.BETWEEN);
         ButtonLayout.setSpacing(false);
-        ButtonLayout2.setWidth("265px");
+        ButtonLayout2.setWidth("310px");
        // ButtonLayout2.setJustifyContentMode(JustifyContentMode.BETWEEN);
         ButtonLayout2.setSpacing(true);
         // form layout
@@ -134,6 +136,7 @@ public class ManageStocksView extends VerticalLayout {
         // button layout
         ButtonLayout.add(delete, new HorizontalLayout(cancel, save));
         ButtonLayout2.add(cancel2, new HorizontalLayout(add));
+        binder.bindInstanceFields(this);
         // add here
         layout.addToPrimary(formEdit, ButtonLayout);
         layout.addToSecondary(formAdd, ButtonLayout2);
@@ -142,41 +145,67 @@ public class ManageStocksView extends VerticalLayout {
     // Click listeners
     public void clickListeners() {
         grid.asSingleSelect().addValueChangeListener(event -> {
-            if (event.getValue() != null) {
-
+            StocksEntity stock = (StocksEntity) event.getValue();
+            if (stock != null) {
+                bindForm(stock);
             } else {
-            Notification.show("can't select");
+                clearForm();
             }
         });
 
         // Action events related to add item form
+        cancel2.addClickListener(event -> {
+            information2.setValue("");
+            symbol2.setValue("");
+        });
+
         add.addClickListener(event -> {
         if (validate.addStockValidation(symbol2.getValue(), information2.getValue())) {
             service.Save(new StocksEntity(symbol2.getValue(), information2.getValue()));
-            Notification error = Notification.show("Item was added");
-            error.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            Notification message = Notification.show("Stock was added");
+            message.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            symbol2.setValue("");
+            information2.setValue("");
+            refreshGrid(grid);
+
         } else {
             Notification error = Notification.show("Could not add the new item");
             error.addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
         });
 
-            cancel2.addClickListener(event -> {
-                information2.setValue("");
-                symbol2.setValue("");
-            });
-
-
-            delete.addClickListener(event -> {
-                //service.Delete();
-            });
-            save.addClickListener(event -> {
-
-            });
+            // Action events related to add item form
             cancel.addClickListener(event -> {
                 information.setValue("");
                 symbol.setValue("");
             });
+            delete.addClickListener(event -> {
+                StocksEntity stocks = new StocksEntity();
+                if (validate.deleteStockValidation(symbol.getValue(), information.getValue())) {service.Delete(this.stock);
+                   Notification message = Notification.show("Stock was deleted");
+                   message.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                   refreshGrid(grid);
+                }
+            });
+            save.addClickListener(event -> {
+                if (validate.editStockValidation(symbol.getValue(), information.getValue())) {
+                    try {
+                        binder.writeBean(this.stock);
+                        service.Save(this.stock);
+                        Notification message = Notification.show("Stock was updated");
+                        message.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                        refreshGrid(grid);
+
+                    } catch (ValidationException e) {
+                        Notification message = Notification.show("Stock was not updated, ValidationException");
+                        message.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    }
+                }
+            });
+
+        refresh.addClickListener(event -> {
+            refreshGrid(grid);
+        });
     }
 
     // Display data to user in grid layout
@@ -186,5 +215,19 @@ public class ManageStocksView extends VerticalLayout {
                 (Pageable) PageRequest.of(query.getPage(), query.getPageSize(),
                         VaadinSpringDataHelpers.toSpringDataSort(query)))
                 .stream());
+    }
+    // refresh data
+    public void refreshGrid(Grid grid) {
+        service.Clear(grid);
+        displayData(grid);
+    }
+
+    public void bindForm(StocksEntity stock) {
+        this.stock = stock;
+        binder.readBean(this.stock);
+    }
+
+    public void clearForm() {
+        bindForm(null);
     }
 }

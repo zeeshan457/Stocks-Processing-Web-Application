@@ -42,6 +42,24 @@ public class Validation {
         return true;
     }
 
+    public boolean editStockValidation(String symbol, String information) {
+        if (symbol.trim().isEmpty() || information.trim().isEmpty()) {
+            Notification error = Notification.show("One or more field are empty");
+            error.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean deleteStockValidation(String symbol, String information) {
+        if (symbol.trim().isEmpty() || information.trim().isEmpty()) {
+            Notification error = Notification.show("One or more field are empty");
+            error.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return false;
+        }
+        return true;
+    }
+
     public boolean ComboboxValidation() {
         return true;
     }

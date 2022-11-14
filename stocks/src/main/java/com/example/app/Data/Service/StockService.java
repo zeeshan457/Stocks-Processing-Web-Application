@@ -5,6 +5,7 @@ import com.example.app.Data.Entity.StocksEntity;
 import com.example.app.Data.Entity.UserEntity;
 import com.example.app.Data.Repository.StocksRepository;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,6 @@ public class StockService {
         return repo.findAll(pageable);
     }
 
-
     // Save a stock in the database
     public void Save(StocksEntity stock) {
         if (stock == null) {
@@ -44,8 +44,7 @@ public class StockService {
         }
     }
 
-    public void Clear() {
-
+    public void Clear(Grid grid) {
+    grid.select(null);
     }
-
 }

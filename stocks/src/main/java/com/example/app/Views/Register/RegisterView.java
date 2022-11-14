@@ -49,9 +49,6 @@ public class RegisterView extends VerticalLayout {
         RegisterButton.addClickListener(event -> {
             if (validate.RegisterValidation(username.getValue(), password1.getValue(), password2.getValue())) {
                 service.Register(username.getValue(), password1.getValue());
-                Notification registerMessage = Notification.show("Registration Success");
-                registerMessage.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                UI.getCurrent().navigate("Login");
             }
         });
         BackButton.addClickListener(event -> {

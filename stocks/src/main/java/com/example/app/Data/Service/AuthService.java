@@ -4,6 +4,9 @@ import com.example.app.Data.Entity.UserEntity;
 import com.example.app.Data.Repository.UserRepository;
 import com.example.app.Data.Role;
 
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +29,18 @@ public class AuthService {
         }
     }
 
-    // Register users here by calling the .save() method
+    // Register users here by calling the .save() method and checking if a username already exists
     public void Register(String username, String password) {
-        UserEntity user = new UserEntity(username, password, Role.USER);
-        repo.save(user);
+        UserEntity findUser = repo.findByUsername(username);
+        if (findUser != null && findUser.getUsername().equals(username)) {
+            Notification message = Notification.show("Username was taken");
+            message.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        } else {
+            UserEntity user = new UserEntity(username, password, Role.USER);
+            repo.save(user);
+            Notification registerMessage = Notification.show("Registration Success");
+            registerMessage.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            UI.getCurrent().navigate("Login");
+        }
     }
 }
