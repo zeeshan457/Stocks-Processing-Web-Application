@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class UserEntity extends AbstractEntity{
 
     // Entities for the table
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, unique = true, length = 50)
     private String username;
 
     @Column(nullable = false, length = 50)
@@ -24,7 +24,6 @@ public class UserEntity extends AbstractEntity{
     @Column(nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private Role roles;
-
 }
 
 

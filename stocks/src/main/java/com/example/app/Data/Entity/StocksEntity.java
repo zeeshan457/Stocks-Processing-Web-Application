@@ -23,4 +23,6 @@ public class StocksEntity extends AbstractEntity {
     @Column(nullable = false, length = 255)
     private String Information;
 
+
+
 }

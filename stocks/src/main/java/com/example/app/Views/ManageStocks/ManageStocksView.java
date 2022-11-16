@@ -2,15 +2,12 @@ package com.example.app.Views.ManageStocks;
 
 import com.example.app.Data.Entity.StocksEntity;
 import com.example.app.Data.Service.StockService;
-import com.example.app.Data.Stock.Stock;
 import com.example.app.Data.Validation.Validation;
 import com.example.app.Views.MainLayout;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -21,18 +18,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
-import com.vaadin.flow.data.provider.SortDirection;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-import javax.swing.*;
-import java.util.Set;
 
 @Route(value = "Manage", layout = MainLayout.class)
 @PageTitle("Manage")
@@ -211,7 +203,7 @@ public class ManageStocksView extends VerticalLayout {
     // Display data to user in grid layout
     public void displayData(Grid grid) {
         // Lazy Loading
-        grid.setItems(query -> service.list(
+        grid.setItems(query -> service.findAllRecords(
                 (Pageable) PageRequest.of(query.getPage(), query.getPageSize(),
                         VaadinSpringDataHelpers.toSpringDataSort(query)))
                 .stream());
