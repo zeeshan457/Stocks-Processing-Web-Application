@@ -2,13 +2,13 @@ package com.example.app.Views.ViewStocks;
 
 import com.example.app.Data.Entity.StocksEntity;
 import com.example.app.Data.Service.StockService;
-import com.example.app.Data.Stock.StockAPI;
+import com.example.app.Data.API.StockAPI;
+import com.example.app.Data.Validation.Validation;
 import com.example.app.Views.MainLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -38,6 +38,7 @@ public class ViewStocksView extends VerticalLayout {
     public StockService service;
 
     StockAPI APIservice = new StockAPI();
+    Validation validate = new Validation();
 
     // Constructor and method calls
     public ViewStocksView() {
@@ -48,11 +49,13 @@ public class ViewStocksView extends VerticalLayout {
     public void addGrid() {
         // Table to display stock data
         grid = new Grid<>(StockAPI.class, false);
+
         grid.addColumn(StockAPI::getDate).setHeader("Date");
         grid.addColumn(StockAPI::getOpen).setHeader("Open");
         grid.addColumn(StockAPI::getClose).setHeader("Close");
         grid.addColumn(StockAPI::getHigh).setHeader("High");
         grid.addColumn(StockAPI::getLow).setHeader("Low");
+
         HorizontalLayout ButtonLayout = new HorizontalLayout();
         showButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         clearButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -66,7 +69,6 @@ public class ViewStocksView extends VerticalLayout {
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.START);
         setDefaultHorizontalComponentAlignment(Alignment.START);
-        getStyle().set("text-align", "center");
         add(options, ButtonLayout, grid);
     }
 
@@ -82,14 +84,17 @@ public class ViewStocksView extends VerticalLayout {
     public void actionEvents() {
         showButton.addClickListener(event -> {
             try {
-                APIservice.getStockFromAPI(grid, String.valueOf(options.getValue()));
+                    Notification message = new Notification("Please select a value");
+                    APIservice.getStockFromAPI(grid, String.valueOf(options.getValue()));
+
             } catch (IOException e) {
                 Notification.show("IO Exception");
             }
         });
 
         clearButton.addClickListener(event -> {
-            service.Clear(grid);
+            grid.select(null);
+
         });
     }
 }

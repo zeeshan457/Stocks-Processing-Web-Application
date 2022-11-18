@@ -60,7 +60,14 @@ public class Validation {
         return true;
     }
 
-    public boolean ComboboxValidation() {
-        return true;
+    public boolean selectStockValidation(String symbol) {
+        if (symbol.trim().isEmpty()) {
+            Notification error = Notification.show("Please select a stock from the list");
+            error.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return false;
+        }
+    return true;
     }
+
+
 }
