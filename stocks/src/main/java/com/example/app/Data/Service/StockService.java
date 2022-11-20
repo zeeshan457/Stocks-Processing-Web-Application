@@ -18,11 +18,12 @@ public class StockService {
     private StocksRepository repo;
     private StocksEntity stock;
 
-    // Find all stocks in database
+    // Find all stocks in database table
     public Page<StocksEntity> findAllRecords(Pageable pageable) {
         return repo.findAll(pageable);
     }
 
+    // Get all symbols in database table
     public Page<StocksEntity> findAllSymbols(Pageable pageable) {
         return repo.getSymbols(pageable);
     }

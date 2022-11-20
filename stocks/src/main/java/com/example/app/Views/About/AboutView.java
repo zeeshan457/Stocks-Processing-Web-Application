@@ -13,22 +13,21 @@ import com.vaadin.flow.router.Route;
 @Route(value = "about", layout = MainLayout.class)
 public class AboutView extends VerticalLayout {
 
-    // Constructor
+    // Constructor and method call
     public AboutView() {
+        addAboutSection();
+    }
+
+    public void addAboutSection() {
         setSpacing(false);
         Image img = new Image("images/empty-plant.png", "placeholder plant");
         img.setWidth("200px");
         add(img);
-
-
         // Adding components
         add(new H2("About the application"));
-        add(new Paragraph("Information"));
-
+        add(new Paragraph("This application is designed to "));
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
-        getStyle().set("text-align", "center");
-    }
-
+        getStyle().set("text-align", "center");}
 }

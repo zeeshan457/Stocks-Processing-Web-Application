@@ -1,5 +1,7 @@
 package com.example.app.Views.Login;
 
+import com.example.app.Data.Entity.UserEntity;
+import com.example.app.Data.Repository.UserRepository;
 import com.example.app.Data.Service.AuthService;
 import com.example.app.Data.Validation.Validation;
 import com.vaadin.flow.component.UI;
@@ -18,6 +20,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.security.auth.message.AuthException;
 
 // Annotations for the class configurations
@@ -29,6 +33,9 @@ public class LoginView extends VerticalLayout {
     // Attributes
     @Autowired
     private AuthService service;
+    private UserRepository repo;
+
+
     private final Validation validate = new Validation();
     private H2 Title;
     private TextField username;
@@ -38,7 +45,8 @@ public class LoginView extends VerticalLayout {
     HorizontalLayout layout = new HorizontalLayout();
 
     // Constructor and method calls
-    public LoginView() {
+    public LoginView(@Autowired AuthService service) {
+        this.service = service;
         AddLogin();
         actionEvents();
     }
@@ -84,4 +92,8 @@ public class LoginView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
         getStyle().set("text-align", "center");
         }
+
+    public TextField getUsernameTextField() {
+        return username;
     }
+}

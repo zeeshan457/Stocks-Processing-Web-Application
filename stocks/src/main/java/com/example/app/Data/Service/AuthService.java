@@ -4,14 +4,26 @@ import com.example.app.Data.Entity.UserEntity;
 import com.example.app.Data.Repository.UserRepository;
 import com.example.app.Data.Role;
 
+import com.example.app.Views.About.AboutView;
+import com.example.app.Views.Home.HomeView;
+import com.example.app.Views.Login.LoginView;
+import com.example.app.Views.ManageStocks.ManageStocksView;
+import com.example.app.Views.Processing.ProcessingView;
+import com.example.app.Views.ViewStocks.ViewStocksView;
+import com.example.app.components.appnav.AppNav;
+import com.example.app.components.appnav.AppNavItem;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.message.AuthException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AuthService {
@@ -20,10 +32,14 @@ public class AuthService {
     @Autowired
     private UserRepository repo;
 
+    private UserEntity user;
+    public VaadinSession session;
+
     public void Login(String username, String password) throws AuthException {
-        UserEntity user = repo.findByUsername(username);
+        user = repo.findByUsername(username);
         if (user != null && user.getPassword().equals(password)) {
-            VaadinSession.getCurrent().setAttribute(UserEntity.class, user);
+            session = VaadinSession.getCurrent();
+            session.setAttribute("username", username);
         } else {
             throw new AuthException();
         }
@@ -41,6 +57,28 @@ public class AuthService {
             Notification registerMessage = Notification.show("Registration Success");
             registerMessage.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             UI.getCurrent().navigate("Login");
+        }
+    }
+
+    // Returns all usernames from database table
+    public List<String> getAllUsername() {
+        return repo.getUsernames();
+    }
+
+    public void validateUserViews(String username, AppNav nav) {
+
+        // current user and findingByRole
+        user = repo.findByUsername(username);
+
+        if (user.getRoles().equals(Role.ADMIN)) {
+            nav.addItem(new AppNavItem("Manage", ManageStocksView.class, "la la-columns"));
+            nav.addItem(new AppNavItem("Logout", LoginView.class));
+        } else if (user.getRoles().equals(Role.USER)) {
+            nav.addItem(new AppNavItem("Home", HomeView.class, "la la-globe"));
+            nav.addItem(new AppNavItem("View Stocks", ViewStocksView.class, "la la-columns"));
+            nav.addItem(new AppNavItem("Processing", ProcessingView.class, "la la-code-branch"));
+            nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
+            nav.addItem(new AppNavItem("Logout", LoginView.class));
         }
     }
 }

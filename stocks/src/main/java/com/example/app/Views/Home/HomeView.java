@@ -4,10 +4,12 @@ import com.example.app.Views.MainLayout;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.server.VaadinSession;
 
 
 @PageTitle("Home")
@@ -16,8 +18,22 @@ public class HomeView extends VerticalLayout {
 
     // Constructor and calling method here
     public HomeView() {
-        setSpacing(false);
+        checkLogin();
         addHome();
+    }
+
+    public void addHome() {
+        setSpacing(false);
+        H1 Title = new H1("Welcome to the Stocks Application");
+        Image HomeImage = new Image("images/stockgif.gif", "stock image");
+            Paragraph Information = new Paragraph("The stocks application is a platform that enables users to view stocks, " +
+                    "and process them in a way, which is very user friendly.");
+        Paragraph paragraph = new Paragraph("The view stock page will enable users to find historical data for any stock " +
+                "selected in the list. Also, the data can be converted into a dataset. The processing page will enable users to " +
+                "process historical data from a dataset. Admins on the system can manage stocks by using CRUD functionality.");
+            HomeImage.setWidth("200px");
+            // Adding components
+            add(HomeImage, Title, Information, paragraph);
         // Configs
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
@@ -25,15 +41,13 @@ public class HomeView extends VerticalLayout {
         getStyle().set("text-align", "center");
     }
 
-    public void addHome() {
-        H1 Title = new H1("Welcome to the Stocks Application");
-        Image HomeImage = new Image("images/stockgif.gif", "stock image");
-            Paragraph Information = new Paragraph("The stocks application is a platform that enables users to view stocks, " +
-                    "and process them in a way, which is very user friendly 🤗");
-            HomeImage.setWidth("200px");
-            // Adding components
-            add(HomeImage);
-            add(Title);
-            add(Information);
+    public void checkLogin() {
+        VaadinSession session = VaadinSession.getCurrent();
+        try {
+            session.getAttribute("username").toString();
+
+        } catch(Exception e) {
+            Notification.show("You are not logged in");
+        }
     }
 }

@@ -12,10 +12,7 @@ import com.vaadin.flow.server.VaadinSession;
 public class LogoutView {
 
     public LogoutView() {
-        UI.getCurrent().navigate("Menu");
-        Notification logoutMessage = Notification.show("Logout success");
-        logoutMessage.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-        VaadinSession.getCurrent().getSession().invalidate();
-        VaadinSession.getCurrent().close();
+        VaadinSession session = VaadinSession.getCurrent();
+        session.setAttribute("username", null);
     }
 }

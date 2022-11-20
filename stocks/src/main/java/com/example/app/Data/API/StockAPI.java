@@ -1,6 +1,7 @@
 package com.example.app.Data.API;
 
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import lombok.AllArgsConstructor;
@@ -48,7 +49,7 @@ public class StockAPI {
       Low = low;
    }
 
-   public void getStockFromAPI(Grid grid, String option) throws IOException {
+   public void getStockFromAPI(Grid<StockAPI> grid, String option) throws IOException {
       // start year
       fromYear = Calendar.getInstance();
       // Current year
@@ -75,9 +76,14 @@ public class StockAPI {
 
             // Getting all the intervals based on the stock selected and positions in the Arr.
             dataProvider.add(new StockAPI(Date, Open, Close, High, Low));
+            grid.getDataProvider().refreshAll();
          }
       }
 
       grid.setItems(dataProvider);
+   }
+
+   public void Refresh() {
+      UI.getCurrent().getPage().reload();
    }
 }
