@@ -17,38 +17,35 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import java.awt.*;
 
-// Annotations for the class configurations
 @AnonymousAllowed
 @PageTitle("Menu Page")
 @Route(value = "Menu")
 @RouteAlias(value = "")
 public class MenuView extends VerticalLayout {
 
-    // Attributes
+    /**
+     *
+     * Attributes
+     *
+     */
     private H2 Title;
     private Button LoginButton;
     private Button RegisterButton;
 
-    // Constructor and method call
+    /**
+     *
+     * Constructor and method call
+     */
     public MenuView() {
         AddMenu();
-        // Configs
-        setSizeFull();
-        setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-        setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
-        getStyle().set("text-align", "center");
-
-        // LoginButton action Listener
-        LoginButton.addClickListener(event -> {
-            UI.getCurrent().navigate("Login");
-        });
-
-        // RegisterButton action Listener
-        RegisterButton.addClickListener(event -> {
-            UI.getCurrent().navigate("Register");
-        });
+        actionEvents();
     }
 
+    /**
+     *
+     * Creating the menu
+     *
+     */
     public void AddMenu() {
         Title = new H2("Main Menu");
         LoginButton = new Button("Login");
@@ -57,7 +54,24 @@ public class MenuView extends VerticalLayout {
         LoginButton.setWidth("400px");
         RegisterButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         RegisterButton.setWidth("400px");
-
         add(Title, LoginButton, RegisterButton);
+        setSizeFull();
+        setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+        setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+        getStyle().set("text-align", "center");
+    }
+
+    /**
+     *
+     * Action events
+     *
+     */
+    public void actionEvents() {
+        LoginButton.addClickListener(event -> {
+            UI.getCurrent().navigate("Login");
+        });
+        RegisterButton.addClickListener(event -> {
+            UI.getCurrent().navigate("Register");
+        });
     }
 }

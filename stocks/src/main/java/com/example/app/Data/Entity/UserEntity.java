@@ -12,9 +12,16 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name = "users")
-public class UserEntity extends AbstractEntity{
 
-    // Entities for the table
+    /**
+     *
+     * Creating table for users
+     * Column 1 is username
+     * Column 2 is password
+     * Column 3 is role
+     *
+     */
+public class UserEntity extends AbstractEntity{
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 

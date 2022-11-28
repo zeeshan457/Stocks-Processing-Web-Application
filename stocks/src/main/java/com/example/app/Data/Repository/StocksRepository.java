@@ -9,9 +9,16 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
+
 public interface StocksRepository extends JpaRepository<StocksEntity, Integer> {
 
-    // Getting all symbols from GPA table
+    /**
+     *
+     * Getting all symbols from GPA table
+     *
+     * @param pageable passing page object to get current page
+     * @return a page object, containing all stock symbols.
+     */
     @Query("SELECT s.Symbol FROM StocksEntity s")
     Page<StocksEntity> getSymbols(Pageable pageable);
 

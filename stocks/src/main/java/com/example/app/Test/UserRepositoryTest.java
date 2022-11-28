@@ -13,16 +13,22 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class UserRepositoryTest {
 
-    // Injecting from Repository to testing class
+    /**
+     * Attributes and injecting
+     */
     @Autowired
     private UserRepository repo;
 
-    // TEST HAS PASSED
+    /**
+     *
+     * This test PASSED, to register a user in the system
+     *
+     * @throws Exception if user fails
+     */
     @Test
     public void TestRegister() throws Exception {
-        UserEntity user1 = new UserEntity("Admin", "12345", Role.ADMIN);
-        UserEntity user2 = new UserEntity("User", "12345", Role.USER);
-        //save user, verify has ID value after save
+        UserEntity user1 = new UserEntity("testing1", "12345", Role.USER);
+        UserEntity user2 = new UserEntity("testing2", "12345", Role.USER);
         this.repo.save(user1);
         this.repo.save(user2);
     }

@@ -24,18 +24,19 @@ import org.springframework.beans.factory.annotation.Value;
 
 import javax.security.auth.message.AuthException;
 
-// Annotations for the class configurations
 @AnonymousAllowed
 @PageTitle("Login Page")
 @Route(value = "Login")
 public class LoginView extends VerticalLayout {
 
-    // Attributes
+    /**
+     *
+     * Attributes and injections
+     *
+     */
     @Autowired
     private AuthService service;
     private UserRepository repo;
-
-
     private final Validation validate = new Validation();
     private H2 Title;
     private TextField username;
@@ -44,14 +45,23 @@ public class LoginView extends VerticalLayout {
     private Button BackButton;
     HorizontalLayout layout = new HorizontalLayout();
 
-    // Constructor and method calls
+    /**
+     *
+     * Constructing the view
+     *
+     * @param service injecting here
+     */
     public LoginView(@Autowired AuthService service) {
         this.service = service;
         AddLogin();
         actionEvents();
     }
 
-    // LoginButton action Listener calling service method and validation here
+    /**
+     *
+     * LoginButton action Listener calling service method and validation here
+     *
+     */
     public void actionEvents() {
         LoginButton.addClickListener(event -> {
             if (validate.LoginValidation(username.getValue(), password.getValue())) {
@@ -73,7 +83,10 @@ public class LoginView extends VerticalLayout {
         });
     }
 
-    // creating the login fields here
+    /**
+     *
+     * Creating the login fields here
+     */
     public void AddLogin() {
         Title = new H2("Login");
         username = new TextField("Username");
@@ -86,13 +99,16 @@ public class LoginView extends VerticalLayout {
         BackButton.setWidth("100px");
         layout.add(BackButton, LoginButton);
         add(Title, username, password, layout);
-        // Configs
         setSizeFull();
         setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
         getStyle().set("text-align", "center");
         }
 
+    /**
+     *
+     * @return username field
+     */
     public TextField getUsernameTextField() {
         return username;
     }

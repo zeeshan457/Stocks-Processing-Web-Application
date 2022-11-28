@@ -30,10 +30,13 @@ import org.springframework.data.domain.Pageable;
 @PageTitle("Manage")
 public class ManageStocksView extends VerticalLayout {
 
-    // Attributes and injecting repository here
+    /**
+     *
+     * Attributes and injecting
+     *
+     */
     @Autowired
     private StockService service;
-
     private StocksEntity stock;
     private Validation validate = new Validation();
     private Grid grid;
@@ -44,23 +47,29 @@ public class ManageStocksView extends VerticalLayout {
     private SplitLayout splitLayout = new SplitLayout();
     private HorizontalLayout layout = new HorizontalLayout();
     BeanValidationBinder<StocksEntity> binder;
-    // form1
     private H3 title1;
     private Button cancel;
     private Button delete;
     private Button save;
     private Button refresh;
-    // form2
     private H3 title2;
     private Button cancel2;
     private Button delete2;
     private Button add;
 
-    // constructor and method calls
+
+    /**
+     * constructor and method calls
+     */
     public ManageStocksView() {
         Grid();
     }
 
+    /**
+     *
+     * Constructing the grid and method calls
+     *
+     */
     public void Grid() {
         grid = new Grid<>(StocksEntity.class, false);
         grid.addColumn("symbol").setAutoWidth(true);
@@ -78,19 +87,20 @@ public class ManageStocksView extends VerticalLayout {
         add(layout);
         add(splitLayout);
         clickListeners();
-
-        // Configs
         grid.addThemeVariants(GridVariant.MATERIAL_COLUMN_DIVIDERS);
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.START);
         setDefaultHorizontalComponentAlignment(Alignment.START);
     }
 
+    /**
+     *
+     * Binding the form here and creating the form
+     *
+     * @param layout
+     */
     public void Editor(SplitLayout layout) {
-        // Binders
         binder = new BeanValidationBinder<>(StocksEntity.class);
-
-
         HorizontalLayout ButtonLayout = new HorizontalLayout();
         HorizontalLayout ButtonLayout2 = new HorizontalLayout();
         HorizontalLayout Main = new HorizontalLayout();
@@ -120,21 +130,20 @@ public class ManageStocksView extends VerticalLayout {
         ButtonLayout.setJustifyContentMode(JustifyContentMode.BETWEEN);
         ButtonLayout.setSpacing(false);
         ButtonLayout2.setWidth("310px");
-       // ButtonLayout2.setJustifyContentMode(JustifyContentMode.BETWEEN);
         ButtonLayout2.setSpacing(true);
-        // form layout
         formEdit.add(title1,symbol, information);
         formAdd.add(title2,symbol2,information2);
-        // button layout
         ButtonLayout.add(delete, new HorizontalLayout(cancel, save));
         ButtonLayout2.add(cancel2, new HorizontalLayout(add));
         binder.bindInstanceFields(this);
-        // add here
         layout.addToPrimary(formEdit, ButtonLayout);
         layout.addToSecondary(formAdd, ButtonLayout2);
     }
 
-    // Click listeners
+    /**
+     *
+     * Click listeners
+     */
     public void clickListeners() {
         grid.asSingleSelect().addValueChangeListener(event -> {
             StocksEntity stock = (StocksEntity) event.getValue();
@@ -144,13 +153,11 @@ public class ManageStocksView extends VerticalLayout {
                 clearForm();
             }
         });
-
         // Action events related to add item form
         cancel2.addClickListener(event -> {
             information2.setValue("");
             symbol2.setValue("");
         });
-
         add.addClickListener(event -> {
         if (validate.addStockValidation(symbol2.getValue(), information2.getValue())) {
             service.Save(new StocksEntity(symbol2.getValue(), information2.getValue()));
@@ -159,13 +166,11 @@ public class ManageStocksView extends VerticalLayout {
             symbol2.setValue("");
             information2.setValue("");
             refreshGrid(grid);
-
         } else {
             Notification error = Notification.show("Could not add the new item");
             error.addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
         });
-
             // Action events related to add item form
             cancel.addClickListener(event -> {
                 information.setValue("");
@@ -200,7 +205,12 @@ public class ManageStocksView extends VerticalLayout {
         });
     }
 
-    // Display data to user in grid layout
+    /**
+     *
+     * Display data to user in grid layout
+     *
+     * @param grid
+     */
     public void displayData(Grid grid) {
         // Lazy Loading
         grid.setItems(query -> service.findAllRecords(
@@ -208,17 +218,33 @@ public class ManageStocksView extends VerticalLayout {
                         VaadinSpringDataHelpers.toSpringDataSort(query)))
                 .stream());
     }
-    // refresh data
+    /**
+     *
+     * refresh data
+     *
+     * @param grid passing grid for assigning in method call
+     */
     public void refreshGrid(Grid grid) {
         service.Clear(grid);
         displayData(grid);
     }
 
+    /**
+     *
+     * Binding form using bean object
+     *
+     * @param stock
+     */
     public void bindForm(StocksEntity stock) {
         this.stock = stock;
         binder.readBean(this.stock);
     }
 
+    /**
+     *
+     * Clear the form
+     *
+     */
     public void clearForm() {
         bindForm(null);
     }

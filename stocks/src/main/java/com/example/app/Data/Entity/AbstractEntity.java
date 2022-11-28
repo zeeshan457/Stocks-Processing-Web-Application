@@ -9,10 +9,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-// Annotations for this class
 @MappedSuperclass
 @Getter
 @Setter
+
+    /**
+     *
+     *
+     * Entity contain the ID, will implement this in other entity classes
+     *
+     */
 public class AbstractEntity {
     @Id
     @Unique

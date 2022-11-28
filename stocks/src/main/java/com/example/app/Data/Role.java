@@ -1,7 +1,11 @@
 package com.example.app.Data;
 
 
-// the users for the application represented as enums
+    /**
+     *
+     * the user types for the application. If more user types are needed, add here
+     *
+     */
 public enum Role {
     USER, ADMIN
 }

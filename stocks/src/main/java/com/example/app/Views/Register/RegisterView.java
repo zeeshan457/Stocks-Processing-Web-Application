@@ -19,14 +19,16 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 
-// Annotations for this class
 @AnonymousAllowed
 @PageTitle("Register Page")
 @Route(value = "Register")
 public class RegisterView extends VerticalLayout {
 
-
-    // Attributes
+    /**
+     *
+     * Attributes and injecting
+     *
+     */
     @Autowired
     private AuthService service;
     private final Validation validate = new Validation();
@@ -38,13 +40,23 @@ public class RegisterView extends VerticalLayout {
     private Button BackButton;
     HorizontalLayout layout = new HorizontalLayout();
 
-    // Constructor and method calls
+    /**
+     *
+     * Constructor and method calls
+     *
+     */
     public RegisterView() {
         AddRegister();
         actionEvents();
     }
 
-    // RegisterButton action Listener and calling services/validation from specific packages.
+
+    /**
+     *
+     * RegisterButton action Listener and calling services/validation from specific packages.
+     * Action events
+     *
+     */
     public void actionEvents() {
         RegisterButton.addClickListener(event -> {
             if (validate.RegisterValidation(username.getValue(), password1.getValue(), password2.getValue())) {
@@ -56,7 +68,11 @@ public class RegisterView extends VerticalLayout {
         });
     }
 
-    // creating the register fields here
+    /**
+     *
+     * creating the register fields
+     *
+     */
     public void AddRegister() {
         Title = new H2("Register");
         username = new TextField("Username");

@@ -28,7 +28,10 @@ import java.util.*;
 @NoArgsConstructor
 public class StockAPI {
 
-   // Attributes
+   /**
+    *
+    * Attributes and injecting
+    */
    private yahoofinance.Stock stock;
    private Calendar fromYear;
    private Calendar toYear;
@@ -40,7 +43,17 @@ public class StockAPI {
    private static int increment = 0;
    List<StockAPI> dataProvider = new ArrayList<>();
 
-   // Construct the stockAPI object
+
+   /**
+    *
+    * Construct the stockAPI object
+    *
+    * @param date type String
+    * @param open type String
+    * @param close type String
+    * @param high type String
+    * @param low type String
+    */
    public StockAPI(String date, String open, String close, String high, String low) {
       Date = date;
       Open = open;
@@ -49,6 +62,14 @@ public class StockAPI {
       Low = low;
    }
 
+   /**
+    *
+    * Creating API method to get  data from Yahoo finance API.
+    *
+    * @param grid passing grid, to get current grid
+    * @param option passing symbol options, to get current option
+    * @throws IOException
+    */
    public void getStockFromAPI(Grid<StockAPI> grid, String option) throws IOException {
       // start year
       fromYear = Calendar.getInstance();
@@ -57,32 +78,32 @@ public class StockAPI {
       fromYear.add(Calendar.YEAR, -5);
       // get stock
       stock = YahooFinance.get(option, fromYear, toYear, Interval.WEEKLY);
-
       if (stock != null) {
          // Iterating stock history
          for (int i = 0; i < stock.getHistory().size(); i++) {
             // passing i to argument to get all intervals
             String Data = stock.getHistory().get(i).toString();
-
             // Regex to split the list into specific data and assigning them
             String[] HistoricalData = Data.split("[-(@/,:>]");
-
             // Split the list based on these symbols, to separate values, then reconstructing the values.
             Date = HistoricalData[1] + "-" + HistoricalData[2] + "-" + HistoricalData[3];
             Open = HistoricalData[6];
             Close = HistoricalData[8];
             High = HistoricalData[5];
             Low = HistoricalData[4];
-
             // Getting all the intervals based on the stock selected and positions in the Arr.
             dataProvider.add(new StockAPI(Date, Open, Close, High, Low));
             grid.getDataProvider().refreshAll();
          }
       }
-
       grid.setItems(dataProvider);
    }
 
+   /**
+    *
+    * Refresh the current page, to refresh the grid.
+    *
+    */
    public void Refresh() {
       UI.getCurrent().getPage().reload();
    }

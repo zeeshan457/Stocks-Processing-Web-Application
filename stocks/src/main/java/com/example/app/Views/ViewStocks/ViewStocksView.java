@@ -26,57 +26,69 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
-// Annotations for the class configurations
 @PageTitle("View Stocks")
 @Route(value = "View-stocks", layout = MainLayout.class)
 public class ViewStocksView extends VerticalLayout {
 
-    // Attributes
+    /**
+     *
+     * Attributes, class calls, and injecting
+     *
+     */
+    @Autowired
+    public StockService service;
     Grid<StockAPI> grid;
     ComboBox<StocksEntity> options = new ComboBox<>("Select Stocks");
     Button showButton = new Button("Show", VaadinIcon.SEARCH.create());
     Button refreshButton = new Button("Refresh", VaadinIcon.REFRESH.create());
     Button writeButton = new Button("Export to CSV", VaadinIcon.CHART.create());
-
-    @Autowired
-    public StockService service;
-
     StockAPI API = new StockAPI();
     Validation validate = new Validation();
 
-    // Constructor and method calls
+
+    /**
+     *
+     * Constructor and method calls
+     *
+     */
     public ViewStocksView() {
         comboBoxData();
         addGrid();
         actionEvents();
     }
+
+
+    /**
+     *
+     * Creating the grid to display API data.
+     *
+     */
     public void addGrid() {
         // Table to display stock data
         grid = new Grid<>(StockAPI.class, false);
-
         grid.addColumn(StockAPI::getDate).setHeader("Date");
         grid.addColumn(StockAPI::getOpen).setHeader("Open");
         grid.addColumn(StockAPI::getClose).setHeader("Close");
         grid.addColumn(StockAPI::getHigh).setHeader("High");
         grid.addColumn(StockAPI::getLow).setHeader("Low");
-
         HorizontalLayout ButtonLayout = new HorizontalLayout();
         showButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         refreshButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         writeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
         ButtonLayout.addAndExpand(refreshButton);
         ButtonLayout.addAndExpand(writeButton);
         ButtonLayout.addAndExpand(showButton);
         setSpacing(true);
-        // Configs
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.START);
         setDefaultHorizontalComponentAlignment(Alignment.START);
         add(options, ButtonLayout, grid);
     }
 
-    // Setting data for the combobox, calling method from service.
+    /**
+     *
+     * Setting data for the combobox, calling method from service.
+     */
     public void comboBoxData() {
         options.setAllowCustomValue(false);
         options.setPlaceholder("Select Stock Symbol");
@@ -86,12 +98,16 @@ public class ViewStocksView extends VerticalLayout {
                 .stream());
     }
 
+    /**
+     *
+     * Action events
+     *
+     */
     public void actionEvents() {
         showButton.addClickListener(event -> {
             try {
                     API.getStockFromAPI(grid, String.valueOf(options.getValue()));
                     grid.getDataProvider().refreshAll();
-
             } catch (IOException e) {
                 Notification.show("IO Exception, stock not found");
             }

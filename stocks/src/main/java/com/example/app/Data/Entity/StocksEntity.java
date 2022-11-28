@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-// Annotations for this class using Lombok
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +14,14 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Table(name = "stocks")
+
+    /**
+     *
+     * Creating table for stocks
+     * Column 1 is symbol
+     * Column 2 is information
+     *
+     */
 public class StocksEntity extends AbstractEntity {
 
     @Column(nullable = false, length = 50)

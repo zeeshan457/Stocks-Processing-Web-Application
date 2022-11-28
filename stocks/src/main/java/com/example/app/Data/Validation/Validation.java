@@ -2,12 +2,19 @@ package com.example.app.Data.Validation;
 
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.shared.ThemeVariant;
 
 public class Validation {
 
+    /**
+     *
+     * Validates a user based on the registration fields
+     *
+     * @param username passing username, to get current username.
+     * @param password1 passing password, to get current password.
+     * @param password2 passing secondary password, to get current secondary password.
+     * @return True or False, based on condition.
+     */
     public boolean RegisterValidation(String username, String password1, String password2) {
-
         if (username.trim().isEmpty() || password1.trim().isEmpty() || password2.trim().isEmpty()) {
             Notification error = Notification.show("One or more field are empty");
             error.addThemeVariants(NotificationVariant.LUMO_ERROR);
@@ -24,6 +31,14 @@ public class Validation {
         return true;
     }
 
+    /**
+     *
+     * Validates a user based on the login fields
+     *
+     * @param username passing username, to get current username.
+     * @param password1 passing password, to get current password.
+     * @return True or False, based on condition.
+     */
     public boolean LoginValidation(String username, String password1) {
         if (username.trim().isEmpty() || password1.trim().isEmpty()) {
             Notification error = Notification.show("One or more field are empty");
@@ -33,6 +48,14 @@ public class Validation {
         return true;
     }
 
+    /**
+     *
+     * Validates add stock
+     *
+     * @param symbol passing symbol, to get current symbol.
+     * @param information passing information, to get current information.
+     * @return True or False, based on condition.
+     */
     public boolean addStockValidation(String symbol, String information) {
         if (symbol.trim().isEmpty() || information.trim().isEmpty()) {
             Notification error = Notification.show("One or more field are empty");
@@ -42,6 +65,14 @@ public class Validation {
         return true;
     }
 
+    /**
+     *
+     * Validates edit stocks
+     *
+     * @param symbol passing symbol, to get current symbol.
+     * @param information passing information, to get current information.
+     * @return True or False, based on condition.
+     */
     public boolean editStockValidation(String symbol, String information) {
         if (symbol.trim().isEmpty() || information.trim().isEmpty()) {
             Notification error = Notification.show("One or more field are empty");
@@ -51,6 +82,14 @@ public class Validation {
         return true;
     }
 
+    /**
+     *
+     * Validates delete stock
+     *
+     * @param symbol passing symbol, to get current symbol.
+     * @param information passing information, to get current information.
+     * @return True or False, based on condition.
+     */
     public boolean deleteStockValidation(String symbol, String information) {
         if (symbol.trim().isEmpty() || information.trim().isEmpty()) {
             Notification error = Notification.show("One or more field are empty");
@@ -60,6 +99,13 @@ public class Validation {
         return true;
     }
 
+    /**
+     *
+     * Validates stock selection
+     *
+     * @param symbol passing symbol, to get current symbol.
+     * @return True or False, based on condition.
+     */
     public boolean selectStockValidation(String symbol) {
         if (symbol.trim().isEmpty()) {
             Notification error = Notification.show("Please select a stock from the list");
@@ -68,6 +114,4 @@ public class Validation {
         }
     return true;
     }
-
-
 }

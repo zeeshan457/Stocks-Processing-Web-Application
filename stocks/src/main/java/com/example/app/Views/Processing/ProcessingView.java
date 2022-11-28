@@ -14,22 +14,34 @@ import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-// Annotations for this class
 @PageTitle("Processing")
 @Route(value = "Processing", layout = MainLayout.class)
 public class ProcessingView extends VerticalLayout {
 
-    // Attributes
+    /**
+     *
+     * Attributes
+     *
+     */
     Upload upload;
     Button processButton;
     Button uploadButton;
 
-    // Constructor and method calls
+    /**
+     *
+     * Constructor and method calls
+     *
+     */
     public ProcessingView() {
         addFileOpener();
         actionEvents();
     }
 
+    /**
+     *
+     * Creating the file section
+     *
+     */
     public void addFileOpener() {
         setSpacing(true);
         upload = new Upload();
@@ -40,27 +52,25 @@ public class ProcessingView extends VerticalLayout {
         uploadButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         upload.setUploadButton(uploadButton);
         upload.setAcceptedFileTypes("application/csv", ".csv");
-
         upload.setWidthFull();
-
         buttonLayout.addAndExpand(processButton);
-
         add(upload, buttonLayout);
-
-        // Configs
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.START);
         setDefaultHorizontalComponentAlignment(Alignment.START);
-        //getStyle().set("text-align", "center");
     }
 
+    /**
+     *
+     *
+     * Action events
+     *
+     */
     public void actionEvents() {
         upload.addFileRejectedListener(event -> {
             String errorMessage = event.getErrorMessage();
             Notification notification = Notification.show(errorMessage + " Files must be .CSV");
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
         });
-
     }
-
 }

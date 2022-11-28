@@ -16,12 +16,20 @@ import com.vaadin.flow.server.VaadinSession;
 @Route(value = "Home", layout = MainLayout.class)
 public class HomeView extends VerticalLayout {
 
-    // Constructor and calling method here
+    /**
+     *
+     * Constructor and calling method here
+     */
     public HomeView() {
         checkLogin();
         addHome();
     }
 
+    /**
+     *
+     * Creating the Home section
+     *
+     */
     public void addHome() {
         setSpacing(false);
         H1 Title = new H1("Welcome to the Stocks Application");
@@ -32,20 +40,22 @@ public class HomeView extends VerticalLayout {
                 "selected in the list. Also, the data can be converted into a dataset. The processing page will enable users to " +
                 "process historical data from a dataset. Admins on the system can manage stocks by using CRUD functionality.");
             HomeImage.setWidth("200px");
-            // Adding components
             add(HomeImage, Title, Information, paragraph);
-        // Configs
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         getStyle().set("text-align", "center");
     }
 
+    /**
+     *
+     * Checking login of user.
+     *
+     */
     public void checkLogin() {
         VaadinSession session = VaadinSession.getCurrent();
         try {
             session.getAttribute("username").toString();
-
         } catch(Exception e) {
             Notification.show("You are not logged in");
         }

@@ -1,8 +1,5 @@
 package com.example.app.Views.Logout;
 
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
@@ -11,6 +8,10 @@ import com.vaadin.flow.server.VaadinSession;
 @PageTitle("Logout")
 public class LogoutView {
 
+    /**
+     *
+     * Getting current session, and setting to null.
+     */
     public LogoutView() {
         VaadinSession session = VaadinSession.getCurrent();
         session.setAttribute("username", null);
