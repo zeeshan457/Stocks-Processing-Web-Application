@@ -1,6 +1,7 @@
 package com.example.app.Data.API;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
@@ -16,7 +17,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
-
 /**
  *
  * using Lombok annotations to remove boiler code.
@@ -24,25 +24,19 @@ import java.util.*;
  */
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"stock", "fromYear", "toYear", "dataProvider"})
 public class StockAPI {
 
    /**
     *
     * Attributes and injecting
     */
-   private yahoofinance.Stock stock;
-   private Calendar fromYear;
-   private Calendar toYear;
    private String Date;
    private String Open;
    private String Close;
    private String High;
    private String Low;
-   private static int increment = 0;
-   List<StockAPI> dataProvider = new ArrayList<>();
-
 
    /**
     *
@@ -71,6 +65,10 @@ public class StockAPI {
     * @throws IOException
     */
    public void getStockFromAPI(Grid<StockAPI> grid, String option) throws IOException {
+      yahoofinance.Stock stock;
+      Calendar fromYear;
+      Calendar toYear;
+      List<StockAPI> dataProvider = new ArrayList<>();
       // start year
       fromYear = Calendar.getInstance();
       // Current year
@@ -86,14 +84,13 @@ public class StockAPI {
             // Regex to split the list into specific data and assigning them
             String[] HistoricalData = Data.split("[-(@/,:>]");
             // Split the list based on these symbols, to separate values, then reconstructing the values.
-            Date = HistoricalData[1] + "-" + HistoricalData[2] + "-" + HistoricalData[3];
+            Date = HistoricalData[3] + "/" + HistoricalData[2] + "/" + HistoricalData[1];
             Open = HistoricalData[6];
             Close = HistoricalData[8];
             High = HistoricalData[5];
             Low = HistoricalData[4];
             // Getting all the intervals based on the stock selected and positions in the Arr.
             dataProvider.add(new StockAPI(Date, Open, Close, High, Low));
-            grid.getDataProvider().refreshAll();
          }
       }
       grid.setItems(dataProvider);

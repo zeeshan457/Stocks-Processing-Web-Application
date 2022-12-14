@@ -69,7 +69,7 @@ public class AuthService {
         }
     }
 
-    /***
+    /**
      *
      * @return all usernames from database table
      */
@@ -77,7 +77,9 @@ public class AuthService {
         return repo.getUsernames();
     }
 
-    /***
+    /**
+     *
+     * Add views based on the users' role.
      *
      * @param username passing username to get the role of that specific user.
      * @param nav adding nav items specific to the role.

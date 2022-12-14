@@ -27,11 +27,10 @@ public class AboutView extends VerticalLayout {
      */
     public void addAboutSection() {
         setSpacing(false);
-        Image img = new Image("images/empty-plant.png", "placeholder plant");
-        img.setWidth("200px");
-        add(img);
         add(new H2("About the application"));
-        add(new Paragraph("This application is designed to "));
+        add(new Paragraph("This application was created for my FYP; if you are interested in stocks and financial " +
+                "data, this application is for you. It enables you to retrieve a dataset from the stock of your choice, " +
+                "analyse it, and uncover interesting trends, by visualising data."));
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
