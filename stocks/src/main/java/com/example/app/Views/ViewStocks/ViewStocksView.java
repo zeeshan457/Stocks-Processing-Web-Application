@@ -5,6 +5,7 @@ import com.example.app.Data.Service.StockService;
 import com.example.app.Data.API.StockAPI;
 import com.example.app.Data.Validation.Validation;
 import com.example.app.Views.MainLayout;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
@@ -14,7 +15,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -23,10 +23,12 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import java.io.ByteArrayInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
@@ -103,30 +105,35 @@ public class ViewStocksView extends VerticalLayout {
                 .stream());
     }
 
+    /**
+     *
+     * Exports the grid CSV
+     *
+     */
     public void Export() {
-
-        StreamResource resource = new StreamResource(
-                options.getValue() + "_Stocks_Dataset.csv",
-                () -> {
-                    try {
-                        Stream<StockAPI> stream = grid.getGenericDataView().getItems();
-                        StringWriter writer = new StringWriter();
-                        StatefulBeanToCsv<StockAPI> bean = new StatefulBeanToCsvBuilder<StockAPI>(writer).build();
-                        bean.write(stream);
-                        content = writer.toString();
-
-                    } catch (CsvDataTypeMismatchException e) {
-                        Notification.show("CsvDataTypeMismatchException");
-                    } catch (CsvRequiredFieldEmptyException e) {
-                        Notification.show("CsvRequiredFieldEmptyException");
-                    }
+            StreamResource resource = new StreamResource(
+                    options.getValue() + "_Stocks_Dataset.csv",
+                    () -> {
+                        try {
+                            // Objects to get grid data, write data, and assign to string.
+                            Stream<StockAPI> stream = grid.getGenericDataView().getItems();
+                            StringWriter writer = new StringWriter();
+                            StatefulBeanToCsv<StockAPI> bean = new StatefulBeanToCsvBuilder<StockAPI>(writer)
+                                    .build();
+                            bean.write(stream);
+                            content = writer.toString();
+                        } catch (CsvDataTypeMismatchException e) {
+                            Notification.show("CsvDataTypeMismatchException");
+                        } catch (CsvRequiredFieldEmptyException e) {
+                            Notification.show("CsvRequiredFieldEmptyException");
+                        }
                         return new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-
                     }
-        );
-        anchor = new Anchor(resource, "Export");
-                }
+            );
 
+            anchor = new Anchor(resource, "Export");
+            anchor.setEnabled(true);
+    }
 
     /**
      *
@@ -137,12 +144,10 @@ public class ViewStocksView extends VerticalLayout {
         showButton.addClickListener(event -> {
             try {
                 API.getStockFromAPI(grid, String.valueOf(options.getValue()));
-                grid.getDataProvider().refreshAll();
             } catch (IOException e) {
                 Notification.show("IO Exception, stock not found");
             }
         });
-
         refreshButton.addClickListener(event -> {
             API.Refresh();
         });
