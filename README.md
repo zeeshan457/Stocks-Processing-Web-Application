@@ -9,7 +9,7 @@ Key features
                Role based system (normal users, and administrator)
                View historical data (fetch data from rest API)
                Export data (CSV file)
-               processing data (ARIMA model)
+               processing data (LSTM model)
                Graph visualisations (from the training, and testing models)
                Manage stocks (add, edit, and delete)
                
