@@ -69,7 +69,7 @@ public class LoginView extends VerticalLayout {
                     service.Login(username.getValue(), password.getValue());
                     Notification loginMessage = Notification.show("Login Success, welcome "
                             + username.getValue());
-                    loginMessage.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                    loginMessage.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
                     UI.getCurrent().navigate("Home");
 
                 } catch(AuthException e){

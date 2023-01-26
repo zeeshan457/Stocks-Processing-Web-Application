@@ -3,6 +3,8 @@ package com.example.app.Data.Validation;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 
+import java.time.LocalDate;
+
 public class Validation {
 
     /**
@@ -114,4 +116,46 @@ public class Validation {
         }
     return true;
     }
-}
+
+    public boolean selectValue(String symbol, String search) {
+
+        if (symbol.trim().equals("null")) {
+            Notification error = Notification.show("Please select a column");
+            error.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return false;
+        }
+
+        if (search.isEmpty()) {
+            Notification error = Notification.show("Please type a value");
+            error.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return false;
+        }
+
+        else if (!search.isEmpty()) {
+            try {
+                Double value  = Double.parseDouble(search);
+            } catch (NumberFormatException nfe) {
+                Notification error = Notification.show("NumberFormat Exception");
+                error.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean selectDate(LocalDate start, LocalDate end) {
+        if (start == null) {
+            Notification error = Notification.show("Start date is Null");
+            error.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return false;
+
+        } else if (end == null) {
+            Notification error = Notification.show("End date is Null");
+            error.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return false;
+        }
+        return true;
+    }
+
+    }

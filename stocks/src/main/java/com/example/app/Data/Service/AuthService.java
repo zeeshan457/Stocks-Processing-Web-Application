@@ -64,7 +64,7 @@ public class AuthService {
             UserEntity user = new UserEntity(username, password, Role.USER);
             repo.save(user);
             Notification registerMessage = Notification.show("Registration Success");
-            registerMessage.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            registerMessage.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
             UI.getCurrent().navigate("Login");
         }
     }
