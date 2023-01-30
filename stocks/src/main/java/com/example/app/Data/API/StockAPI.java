@@ -1,5 +1,6 @@
 package com.example.app.Data.API;
 
+import com.opencsv.bean.CsvBindByName;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
@@ -34,10 +35,15 @@ public class StockAPI {
     * Annotations from OPENCSV library to order the columns
     */
 
+   @CsvBindByName(column = "DATE")
    private LocalDate Date;
+   @CsvBindByName(column = "OPEN")
    private Double Open;
+   @CsvBindByName(column = "CLOSE")
    private Double Close;
+   @CsvBindByName(column = "HIGH")
    private Double High;
+   @CsvBindByName(column = "LOW")
    private Double Low;
 
    /**

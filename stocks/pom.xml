@@ -81,7 +81,6 @@
     </dependencyManagement>
 
     <dependencies>
-
         <!--    Yahoo Finance API      -->
         <dependency>
             <groupId>com.yahoofinance-api</groupId>
@@ -97,19 +96,18 @@
             <version>5.7.1</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-csv -->
+        <!-- Tensorflow - Keras -->
+        <dependency>
+            <groupId>org.tensorflow</groupId>
+            <artifactId>tensorflow</artifactId>
+            <version>1.15.0</version>
+        </dependency>
+
+        <!-- Apache commons -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>1.9.0</version>
-        </dependency>
-
-
-        <!--    MACHINE LEARNING - Tensorflow LSTM    -->
-        <dependency>
-            <groupId>org.tensorflow</groupId>
-            <artifactId>tensorflow</artifactId>
-            <version>2.4.0</version>
         </dependency>
 
         <!--    Maria DB     -->
