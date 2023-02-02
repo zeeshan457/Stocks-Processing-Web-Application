@@ -1,13 +1,8 @@
 package com.example.app.Views.Processing;
 
+import com.example.app.Data.Machine_Learning.LSTM;
 import com.example.app.Views.MainLayout;
-import com.opencsv.CSVParser;
-import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -18,21 +13,13 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.upload.Receiver;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 
 @PageTitle("Processing")
 @Route(value = "Processing", layout = MainLayout.class)
@@ -47,7 +34,14 @@ public class ProcessingView extends VerticalLayout {
     private Upload upload = new Upload(memoryBuffer);
     private Button processButton;
     private Button uploadButton;
-    private FileOutputStream fos = null;
+    private static File file;
+    private LSTM model = new LSTM();
+    private Chart lineChart = new Chart(ChartType.LINE);
+    private Chart scatterChart = new Chart(ChartType.SCATTER);
+    private Chart barChart = new Chart(ChartType.BAR);
+    private Configuration configurationlineChart = lineChart.getConfiguration();
+    private Configuration configurationscatterChart = scatterChart.getConfiguration();
+    private Configuration configurationbarChart = barChart.getConfiguration();
 
     /**
      *
@@ -86,41 +80,29 @@ public class ProcessingView extends VerticalLayout {
     public void Charts() {
         setSpacing(true);
         HorizontalLayout chartLayout1 = new HorizontalLayout();
-//        HorizontalLayout chartLayout2 = new HorizontalLayout();
-        Chart lineChart = new Chart(ChartType.LINE);
-        Chart scatterChart = new Chart(ChartType.SCATTER);
-        Chart barChart = new Chart(ChartType.BAR);
-
-        Configuration configurationlineChart = lineChart.getConfiguration();
-        Configuration configurationscatterChart = scatterChart.getConfiguration();
-        Configuration configurationbarChart = barChart.getConfiguration();
-
 
         DataSeries series = new DataSeries();
         series.add(new DataSeriesItem(0, 10));
         series.add(new DataSeriesItem(1, 20));
         series.add(new DataSeriesItem(2, 15));
 
-        configurationlineChart.setTitle("Line chart prediction");
-        configurationlineChart.setExporting(true);
-        configurationlineChart.addSeries(series);
-
-        configurationscatterChart.setTitle("Scatter chart prediction");
-        configurationscatterChart.setExporting(true);
-        configurationscatterChart.addSeries(series);
-
-        configurationbarChart.setTitle("Bar chart prediction");
-        configurationbarChart.setExporting(true);
-        configurationbarChart.addSeries(series);
+//        configurationlineChart.setTitle("Line chart prediction");
+//        configurationlineChart.setExporting(true);
+//        configurationlineChart.addSeries(series);
+//
+//        configurationscatterChart.setTitle("Scatter chart prediction");
+//        configurationscatterChart.setExporting(true);
+//        configurationscatterChart.addSeries(series);
+//
+//        configurationbarChart.setTitle("Bar chart prediction");
+//        configurationbarChart.setExporting(true);
+//        configurationbarChart.addSeries(series);
 
         chartLayout1.addAndExpand(lineChart, scatterChart, barChart);
         add(chartLayout1);
     }
 
-
-
     /**
-     *
      *
      * Action events.
      * Server side handling and listeners.
@@ -129,29 +111,10 @@ public class ProcessingView extends VerticalLayout {
     public void actionEvents() {
         upload.addSucceededListener(event -> {
             // get file
-            File file = new File(event.getFileName());
+            file = new File(event.getFileName());
             Notification notification = Notification.show(file.getName()
                     + "\n " + file.getAbsolutePath());
             notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
-
-            try {
-                // Use opencsv to parse the CSV data
-                Reader reader = new InputStreamReader(memoryBuffer.getInputStream());
-                CSVReader csvReader = new CSVReader(reader);
-                String[] line;
-                while ((line = csvReader.readNext()) != null) {
-                    // Extract the columns for date, open, close, high, and low
-                    String date = line[0];
-                    String open = line[1];
-                    String close = line[2];
-                    String high = line[3];
-                    String low = line[4];
-
-                }
-
-            } catch (IOException | CsvValidationException e) {
-                Notification.show("IOException || CsvValidationException");
-            }
         });
 
         upload.addFileRejectedListener(event -> {
@@ -160,12 +123,22 @@ public class ProcessingView extends VerticalLayout {
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
         });
 
-
-
         processButton.addClickListener(event -> {
+            if (file != null) {
+                Notification notification = Notification.show("Processing the Dataset " + file.getName());
+                notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
 
-            Notification notification = Notification.show("test");
+                try {
+                    model.lstmModel(file, configurationlineChart, configurationscatterChart, configurationbarChart);
 
+                } catch (IOException | InterruptedException e) {
+                    Notification errorFile = Notification.show("IOException | InterruptedException");
+                    errorFile.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                }
+            } else {
+                Notification errorFile = Notification.show("Please upload a file");
+                    errorFile.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
         });
     }
 }
