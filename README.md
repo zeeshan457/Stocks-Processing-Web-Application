@@ -7,7 +7,8 @@ Key features
 
                Multi user login, register and logout (database interaction)
                Role based system (normal users, and administrator)
-               View historical data (fetch data from rest API)
+               View historical data, based on year and intervals (fetch data from rest API)
+               Filter data based on value and date periods
                Export data (CSV file)
                processing data (LSTM model)
                Graph visualisations (from the training, and testing models)
