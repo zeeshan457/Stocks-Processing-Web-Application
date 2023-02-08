@@ -10,6 +10,7 @@ Key features
                View historical data, based on year and intervals (fetch data from rest API)
                Filter data based on value and date periods
                Export data (CSV file)
+               Export charts, Line, bar and scatter
                processing data (LSTM model)
                Graph visualisations (from the training, and testing models)
                Manage stocks (add, edit, and delete)
