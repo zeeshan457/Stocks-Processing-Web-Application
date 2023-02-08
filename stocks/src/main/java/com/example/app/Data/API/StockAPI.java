@@ -1,6 +1,9 @@
 package com.example.app.Data.API;
 
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.CsvDate;
+import com.opencsv.bean.CsvIgnore;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
@@ -25,7 +28,6 @@ import java.util.*;
 @Getter
 @Setter
 @NoArgsConstructor
-
 public class StockAPI {
 
    /**
@@ -35,15 +37,15 @@ public class StockAPI {
     * Annotations from OPENCSV library to order the columns
     */
 
-   @CsvBindByName(column = "DATE")
+   @CsvBindByPosition(position = 0)
    private LocalDate Date;
-   @CsvBindByName(column = "OPEN")
+   @CsvBindByPosition(position = 1)
    private Double Open;
-   @CsvBindByName(column = "CLOSE")
+   @CsvBindByPosition(position = 2)
    private Double Close;
-   @CsvBindByName(column = "HIGH")
+   @CsvBindByPosition(position = 3)
    private Double High;
-   @CsvBindByName(column = "LOW")
+   @CsvBindByPosition(position = 4)
    private Double Low;
 
    /**
@@ -101,12 +103,12 @@ public class StockAPI {
                // Regex to split the list into specific data and assigning them
                String[] HistoricalData = Data.split("[-(@/,:>]");
                // Split the list based on these symbols, to separate values, then reconstructing the values.
-
                Date = LocalDate.of(Integer.parseInt(HistoricalData[1]), Integer.parseInt(HistoricalData[2]), Integer.parseInt(HistoricalData[3]));
                Open = Double.valueOf(HistoricalData[6]);
                Close = Double.valueOf(HistoricalData[8]);
                High = Double.valueOf(HistoricalData[5]);
                Low = Double.valueOf(HistoricalData[4]);
+
                // Getting all the intervals based on the stock selected and positions in the Array.
                dataProvider.add(new StockAPI(Date, Open, Close, High, Low));
             }

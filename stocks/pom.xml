@@ -88,6 +88,16 @@
             <version>3.15.0</version>
         </dependency>
 
+        <!--   Spark     -->
+        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.spark</groupId>-->
+<!--            <artifactId>spark-sql_2.13</artifactId>-->
+<!--            <version>3.3.1</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
+
+
         <!--    OpenCSV      -->
         <!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
         <dependency>
@@ -96,29 +106,6 @@
             <version>5.7.1</version>
         </dependency>
 
-        <!-- Tensorflow - Keras -->
-        <dependency>
-            <groupId>org.tensorflow</groupId>
-            <artifactId>tensorflow</artifactId>
-            <version>1.15.0</version>
-        </dependency>
-
-        <!-- SLF4J Dependency -->
-        <dependency>
-            <groupId>org.nd4j</groupId>
-            <artifactId>nd4j-api</artifactId>
-            <version>1.0.0-M2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-core</artifactId>
-            <version>1.0.0-M2.1</version>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-simple</artifactId>-->
-<!--            <version>1.7.36</version>-->
-<!--        </dependency>-->
 
         <!-- Apache commons -->
         <dependency>
@@ -134,7 +121,7 @@
             <version>3.0.8</version>
         </dependency>
 
-        <!--    LomBok to reduce boilerplate code     -->
+        <!--    Lombok     -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -211,6 +198,10 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
         </dependency>
     </dependencies>
 
