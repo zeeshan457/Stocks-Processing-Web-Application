@@ -36,22 +36,22 @@ import java.util.stream.Stream;
 
 public class LSTM_Algorithm {
 
-    /**
+    /*
      * Attributes for the LSTM model using Keras library
      * Represents parameters for the model to function
      * (This can be changed and improved to improve the performance or accuracy of data).
      */
-
-    DataSeries series = new DataSeries();
-    int inputSize = 1;
-    int lstmLayerSize = 10;
-    int outputSize = 1;
-    int nEpochs = 200;
+    private DataSeries series = new DataSeries();
+    private int inputSize = 1;
+    private int lstmLayerSize = 10;
+    private int outputSize = 1;
+    private int nEpochs = 200;
 
     /**
-     * Processes a dataset using an LSTM model, dnd trains a dataset.
      *
-     * @throws IOException          file errors
+     * Processes a dataset using an LSTM model, and trains it based on training data.
+     *
+     * @throws IOException file errors
      * @throws InterruptedException splitting files / converting files
      */
     public void lstmModel(String fileName, MemoryBuffer memory, Chart lineChart,
@@ -94,14 +94,9 @@ public class LSTM_Algorithm {
                     closeValues.add(close);
                     highValues.add(high);
                     lowValues.add(low);
-//                    item = new DataSeriesItem();
-//                    item.setX(date.getTime());
-//                    item.setY(open);
-//                    item.setDescription("information");
-//                    series.add(item);
                 }
 
-                // splitting into training and testing, 80% training and 20% testing
+                // splitting dataset into training and testing, 80% training and 20% testing
                 int trainingSet = (int) (openValues.size() * 0.8);
                 int testingSet = openValues.size() - trainingSet;
                 double[][] trainOpen = new double[trainingSet][1];
@@ -110,6 +105,7 @@ public class LSTM_Algorithm {
                 for (int i = 0; i < trainingSet; i++) {
                     trainOpen[i][0] = openValues.get(i);
                 }
+
                 for (int i = trainingSet; i < openValues.size(); i++) {
                     testOpen[i - trainingSet][0] = openValues.get(i);
                 }
@@ -131,6 +127,33 @@ public class LSTM_Algorithm {
 
                 /*
                  * Architecture of the model
+                 *
+                 * The random number generator's seed is set to 12345 using the command.seed(12345). This is done during
+                 *  the training process. This helps to guarantee that the training process's outcomes can be replicated.
+                 *
+                 * The weight initialization technique is changed to Xavier initialization using the.weightInit(WeightInit
+                 * .XAVIER) command. The Xavier initialization technique is a strategy to set up the weights in a neural
+                 * network so that the variance of each layer's outputs is equal to the variance of its inputs, preventing
+                 * vanishing gradients.
+                 *
+                 * The updater is configured to the Adam optimization method with a learning rate of 0.001 by the
+                 * command.updater(new Adam(0.001)). Popular neural network training techniques like the Adam optimization
+                 * algorithm have been proven to function well for a variety of issues.
+                 *
+                 * The .list() starts the definition of the layers in the network.
+                 *
+                 * With inputSize inputs and lstmLayerSize outputs, the.layer(new LSTM.Builder().nIn(inputSize).nOut
+                 * (lstmLayerSize).activation(Activation.TANH).build()) construct adds a Long Short-Term Memory (LSTM)
+                 * layer to the network. The hyperbolic tangent is the activation function (Activation.TANH).
+                 *
+                 * The new RnnOutputLayer.Builder(LossFunctions.LossFunction.MSE).activation(Activation.IDENTITY) of the
+                 * layer has the following code: The network is extended with an output layer using the functions
+                 * nIn(lstmLayerSize).nOut(outputSize).build() and mean squared error (LossFunctions.LossFunction.MSE)
+                 * as the loss function and identity activation function, respectively (Activation.IDENTITY). The layer
+                 * contains outputSize outputs and lstmLayerSize inputs.
+                 *
+                 * The build() creates the MultiLayerConfiguration object.
+                 *
                 */
                 MultiLayerConfiguration configuration = new NeuralNetConfiguration.Builder()
                         .seed(12345)
@@ -164,14 +187,13 @@ public class LSTM_Algorithm {
                 // Create a list to store the data
                 List<Double> predictionDataList = new ArrayList<>();
 
-
                 /*
                  *
                  * Iterate through data and add to data series
                  * X Axis is time step
                  * Y Axis is predicted values
                  *
-                */
+                 */
                 for (int i = 0; i < predictedOpenValues.length; i++) {
                     series.add(new DataSeriesItem(i, predictedOpenValues[i]));
                     predictionDataList.add(predictedOpenValues[i]);
@@ -179,8 +201,6 @@ public class LSTM_Algorithm {
 
 //                ListDataProvider<Double> dataProvider = DataProvider.ofCollection(predictionDataList);
 //                grid.setItems((Stream<String[]>) dataProvider);
-
-
 
             } catch (IOException | ParseException | CsvValidationException e) {
                 e.printStackTrace();
