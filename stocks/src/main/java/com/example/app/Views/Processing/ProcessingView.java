@@ -1,11 +1,13 @@
 package com.example.app.Views.Processing;
 
+import com.example.app.Data.API.StockAPI;
 import com.example.app.Data.Machine_Learning.LSTM_Algorithm;
 import com.example.app.Views.MainLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.charts.Chart;
 import com.vaadin.flow.component.charts.model.*;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -32,14 +34,16 @@ public class ProcessingView extends VerticalLayout {
     private Upload upload = new Upload(memoryBuffer);
     private Button processButton;
     private Button uploadButton;
-    private static File file;
+    private File file;
     private LSTM_Algorithm model = new LSTM_Algorithm();
+    private StockAPI API = new StockAPI();
     private Chart lineChart = new Chart(ChartType.LINE);
     private Chart scatterChart = new Chart(ChartType.SCATTER);
     private Chart barChart = new Chart(ChartType.BAR);
     private Configuration configurationlineChart = lineChart.getConfiguration();
     private Configuration configurationscatterChart = scatterChart.getConfiguration();
     private Configuration configurationbarChart = barChart.getConfiguration();
+    private Grid<String[]> grid = new Grid<>();
 
     /**
      *
@@ -77,31 +81,30 @@ public class ProcessingView extends VerticalLayout {
 
     public void Charts() {
         setSpacing(true);
-        HorizontalLayout chartLayout1 = new HorizontalLayout();
+        HorizontalLayout layout = new HorizontalLayout();
 
-        XAxis xAxis = new XAxis();
-        xAxis.setType(AxisType.DATETIME);
-        configurationlineChart.addxAxis(xAxis);
-        configurationscatterChart.addxAxis(xAxis);
-        configurationbarChart.addxAxis(xAxis);
+//        XAxis xAxis = new XAxis();
+//        xAxis.setType(AxisType.DATETIME);
+//        configurationlineChart.addxAxis(xAxis);
+//        configurationscatterChart.addxAxis(xAxis);
+//        configurationbarChart.addxAxis(xAxis);
 
         configurationlineChart.setTitle("Line chart Predictions");
         configurationlineChart.setExporting(true);
-        configurationlineChart.getxAxis().setTitle("Date");
-        configurationlineChart.getyAxis().setTitle("Stock Price");
+        configurationlineChart.getxAxis().setTitle("Time step");
+        configurationlineChart.getyAxis().setTitle("Predicted value");
 
         configurationscatterChart.setTitle("Scatter chart Predictions");
         configurationscatterChart.setExporting(true);
-        configurationscatterChart.getxAxis().setTitle("Date");
-        configurationscatterChart.getyAxis().setTitle("Stock Price");
+        configurationscatterChart.getxAxis().setTitle("Time step");
+        configurationscatterChart.getyAxis().setTitle("Predicted value");
 
-        configurationbarChart.setTitle("Bar chart Predictions");
-        configurationbarChart.setExporting(true);
-        configurationbarChart.getxAxis().setTitle("Date");
-        configurationbarChart.getyAxis().setTitle("Stock Price");
+        // Set up the columns of the grid
+        grid.addColumn("Time step").setAutoWidth(true);
+        grid.addColumn("Prediction").setAutoWidth(true);
 
-        chartLayout1.addAndExpand(lineChart, scatterChart, barChart);
-        add(chartLayout1);
+        layout.addAndExpand(lineChart, scatterChart, grid);
+        add(layout);
     }
 
     /**
@@ -131,8 +134,8 @@ public class ProcessingView extends VerticalLayout {
                 notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
 
                 try {
-                    model.lstmModel(file.getAbsolutePath(), memoryBuffer, lineChart, scatterChart, barChart);
-
+                    model.lstmModel(file.getName(), memoryBuffer, lineChart, scatterChart, grid);
+                    file = null;
 
                 } catch (IOException e) {
                     Notification errorFile = Notification.show("IOException Error");

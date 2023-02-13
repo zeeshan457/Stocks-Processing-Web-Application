@@ -49,6 +49,10 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>deeplearning4j</id>
+            <url>https://repo.deeplearning4j.org/releases</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -88,24 +92,24 @@
             <version>3.15.0</version>
         </dependency>
 
-        <!--   Spark     -->
-        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql -->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.spark</groupId>-->
-<!--            <artifactId>spark-sql_2.13</artifactId>-->
-<!--            <version>3.3.1</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-
+        <!--    Deeplearning4j    -->
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-native-platform</artifactId>
+            <version>1.0.0-beta7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-core</artifactId>
+            <version>1.0.0-beta7</version>
+        </dependency>
 
         <!--    OpenCSV      -->
-        <!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>5.7.1</version>
         </dependency>
-
 
         <!-- Apache commons -->
         <dependency>

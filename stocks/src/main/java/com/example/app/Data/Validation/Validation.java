@@ -117,20 +117,26 @@ public class Validation {
     return true;
     }
 
-    public boolean selectValue(String symbol, String search) {
+    /**
+     *
+     *
+     *
+     * @param column the selected column
+     * @param search value typed
+     * @return true or false
+     */
+    public boolean selectValue(String column, String search) {
 
-        if (symbol.trim().equals("null")) {
+        if (column.trim().equals("null")) {
             Notification error = Notification.show("Please select a column");
             error.addThemeVariants(NotificationVariant.LUMO_ERROR);
             return false;
         }
-
         if (search.isEmpty()) {
             Notification error = Notification.show("Please type a value");
             error.addThemeVariants(NotificationVariant.LUMO_ERROR);
             return false;
         }
-
         else if (!search.isEmpty()) {
             try {
                 Double value  = Double.parseDouble(search);
@@ -140,10 +146,17 @@ public class Validation {
                 return false;
             }
         }
-
         return true;
     }
 
+    /**
+     *
+     * Validates a date form to filter data.
+     *
+     * @param start from date
+     * @param end end date
+     * @return true or false
+     */
     public boolean selectDate(LocalDate start, LocalDate end) {
         if (start == null) {
             Notification error = Notification.show("Start date is Null");
@@ -157,5 +170,4 @@ public class Validation {
         }
         return true;
     }
-
     }
