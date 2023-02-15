@@ -45,7 +45,6 @@ public class LSTM_Algorithm {
     private int inputSize = 1;
     private int lstmLayerSize = 10;
     private int outputSize = 1;
-    private int nEpochs = 200;
 
     /**
      *
@@ -54,8 +53,8 @@ public class LSTM_Algorithm {
      * @throws IOException file errors
      * @throws InterruptedException splitting files / converting files
      */
-    public void lstmModel(String fileName, MemoryBuffer memory, Chart lineChart,
-                                             Chart scatterChart, Grid<String[]> grid) throws IOException, InterruptedException {
+    public void lstmModel(String fileName, MemoryBuffer memory, Double rate, int epochs, Chart lineChart,
+                          Chart scatterChart, Chart barChart, Grid grid) throws IOException, InterruptedException {
 
         if (memory == null) {
             Notification notification = Notification.show("Buffer is Null");
@@ -113,7 +112,6 @@ public class LSTM_Algorithm {
                 // Prepare training and testing data
                 INDArray trainOpenArray = Nd4j.create(trainOpen);
                 INDArray testOpenArray = Nd4j.create(testOpen);
-
                 // Reshape data to 3D input
                 int examples = trainOpenArray.rows();
                 int sequenceLength = 1;
@@ -158,7 +156,7 @@ public class LSTM_Algorithm {
                 MultiLayerConfiguration configuration = new NeuralNetConfiguration.Builder()
                         .seed(12345)
                         .weightInit(WeightInit.XAVIER)
-                        .updater(new Adam(0.001))
+                        .updater(new Adam(rate))
                         .list()
                         .layer(new LSTM.Builder().nIn(inputSize).nOut(lstmLayerSize)
                                 .activation(Activation.TANH).build())
@@ -173,7 +171,7 @@ public class LSTM_Algorithm {
                 network.setListeners(new ScoreIterationListener(1));
 
                 // train the model
-                for (int i = 0; i < nEpochs; i++) {
+                for (int i = 0; i < epochs; i++) {
                     network.fit(trainData);
                 }
 
@@ -209,12 +207,15 @@ public class LSTM_Algorithm {
             // Configurations for charts
             Configuration configurationlineChart = lineChart.getConfiguration();
             Configuration configurationscatterChart = scatterChart.getConfiguration();
+            Configuration configurationheatrChart = barChart.getConfiguration();
+
 
             // Set name to the dataset selected
             series.setName(fileName);
 
             configurationlineChart.addSeries(series);
             configurationscatterChart.addSeries(series);
+            configurationheatrChart.addSeries(series);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.app.Views.Processing;
 
 import com.example.app.Data.API.StockAPI;
+import com.example.app.Data.Entity.StocksEntity;
 import com.example.app.Data.Machine_Learning.LSTM_Algorithm;
 import com.example.app.Views.MainLayout;
 import com.vaadin.flow.component.button.Button;
@@ -13,6 +14,8 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
@@ -43,7 +46,9 @@ public class ProcessingView extends VerticalLayout {
     private Configuration configurationlineChart = lineChart.getConfiguration();
     private Configuration configurationscatterChart = scatterChart.getConfiguration();
     private Configuration configurationbarChart = barChart.getConfiguration();
-    private Grid<String[]> grid = new Grid<>();
+    private NumberField ratefield = new NumberField("Learning Rate");
+    private IntegerField epochsfield = new IntegerField("Epochs");
+    private Grid grid;
 
     /**
      *
@@ -81,7 +86,18 @@ public class ProcessingView extends VerticalLayout {
 
     public void Charts() {
         setSpacing(true);
-        HorizontalLayout layout = new HorizontalLayout();
+        HorizontalLayout Chartlayout = new HorizontalLayout();
+        HorizontalLayout inputlayout = new HorizontalLayout();
+
+        ratefield.setMin(0.001);
+        ratefield.setMax(0.1);
+        ratefield.setValue(0.001);
+        ratefield.setHasControls(true);
+
+        epochsfield.setMin(10);
+        epochsfield.setMax(100);
+        epochsfield.setValue(100);
+        epochsfield.setHasControls(true);
 
 //        XAxis xAxis = new XAxis();
 //        xAxis.setType(AxisType.DATETIME);
@@ -89,22 +105,24 @@ public class ProcessingView extends VerticalLayout {
 //        configurationscatterChart.addxAxis(xAxis);
 //        configurationbarChart.addxAxis(xAxis);
 
-        configurationlineChart.setTitle("Line chart Predictions");
+        configurationlineChart.setTitle("Line-chart Predictions");
         configurationlineChart.setExporting(true);
         configurationlineChart.getxAxis().setTitle("Time step");
         configurationlineChart.getyAxis().setTitle("Predicted value");
 
-        configurationscatterChart.setTitle("Scatter chart Predictions");
+        configurationscatterChart.setTitle("Scatter-chart Predictions");
         configurationscatterChart.setExporting(true);
         configurationscatterChart.getxAxis().setTitle("Time step");
         configurationscatterChart.getyAxis().setTitle("Predicted value");
 
-        // Set up the columns of the grid
-        grid.addColumn("Time step").setAutoWidth(true);
-        grid.addColumn("Prediction").setAutoWidth(true);
+        configurationbarChart.setTitle("Bar-chart Predictions");
+        configurationbarChart.setExporting(true);
+        configurationbarChart.getxAxis().setTitle("Time step");
+        configurationbarChart.getyAxis().setTitle("Predicted value");
 
-        layout.addAndExpand(lineChart, scatterChart, grid);
-        add(layout);
+        inputlayout.add(ratefield, epochsfield);
+        Chartlayout.addAndExpand(lineChart, scatterChart, barChart);
+        add(inputlayout, Chartlayout);
     }
 
     /**
@@ -134,7 +152,8 @@ public class ProcessingView extends VerticalLayout {
                 notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
 
                 try {
-                    model.lstmModel(file.getName(), memoryBuffer, lineChart, scatterChart, grid);
+                    model.lstmModel(file.getName(), memoryBuffer, ratefield.getValue(), epochsfield.getValue(),
+                                        lineChart, scatterChart, barChart, grid);
                     file = null;
 
                 } catch (IOException e) {
