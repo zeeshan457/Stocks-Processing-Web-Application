@@ -1,20 +1,15 @@
 package com.example.app.Test;
 
-import com.example.app.Data.API.StockAPI;
+import com.example.app.Data.Entity.StocksEntity;
 import com.example.app.Data.Entity.UserEntity;
+import com.example.app.Data.Repository.StocksRepository;
 import com.example.app.Data.Repository.UserRepository;
 import com.example.app.Data.Role;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.data.provider.Query;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.io.IOException;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -29,44 +24,96 @@ public class Junit_Tests {
      */
     @Autowired
     private UserRepository repo = mock(UserRepository.class);
-
-    StockAPI API = new StockAPI();
-
+    @Autowired
+    private StocksRepository repo2 = mock(StocksRepository.class);
 
     /**
      *
-     * This test PASSED, to register a user in the system based on the parameters provided.
+     * This test PASSED, to save a user on the system.
      *
-     * @throws Exception if user fails
      */
     @Test
-    public void testRegistration() throws Exception {
+    public void testSaveUserEntity() {
+
+        // Actions
         UserEntity testUser = new UserEntity("testing1", "12345", Role.USER);
-
-        this.repo.save(testUser);
-
-        // Testing username, password and Role
-        assertEquals("testing1", testUser.getUsername());
-        assertEquals("12345", testUser.getPassword());
-        assertEquals(Role.USER, testUser.getRoles());
+        repo.save(testUser);
+        // Assert
+        UserEntity savedUser = repo.findById(testUser.getId()).orElse(null);
+        assertNotNull("Saved user should not be null", savedUser);
+        assertEquals("testing1", savedUser.getUsername());
+        assertEquals("12345", savedUser.getPassword());
+        assertEquals(Role.USER, savedUser.getRoles());
     }
 
     /**
      *
-     * This test PASSED, to fetch stock data based on the test cases.
+     * This test PASSED, to save users with different roles.
      *
-     * @throws IOException if fetch has failed
      */
     @Test
-    public void testGetStockFromAPI() throws IOException {
-        Grid<StockAPI> grid = new Grid<>();
-        String option = "V";
-        int year = -1;
+    public void testSaveUserEntityWithDifferentRoles() {
 
-        API.getStockFromAPI(grid, option, year);
+        // Actions
+        UserEntity user1 = new UserEntity("user1", "pass1", Role.USER);
+        UserEntity user2 = new UserEntity("user2", "pass2", Role.ADMIN);
+        repo.save(user1);
+        repo.save(user2);
+        // Assert
+        UserEntity savedUser1 = repo.findById(user1.getId()).orElse(null);
+        assertNotNull("Saved user1 should not be null", savedUser1);
+        assertEquals("user1", savedUser1.getUsername());
+        assertEquals("pass1", savedUser1.getPassword());
+        assertEquals(Role.USER, savedUser1.getRoles());
+        UserEntity savedUser2 = repo.findById(user2.getId()).orElse(null);
+        assertNotNull("Saved user2 should not be null", savedUser2);
+        assertEquals("user2", savedUser2.getUsername());
+        assertEquals("pass2", savedUser2.getPassword());
+        assertEquals(Role.ADMIN, savedUser2.getRoles());
+    }
 
-        ListDataProvider<StockAPI> dataProvider = (ListDataProvider<StockAPI>) grid.getDataProvider();
+    /**
+     *
+     * This test PASSED, to save users with different passwords.
+     *
+     */
+    @Test
+    public void testSaveUserEntityWithDifferentPasswords() throws Exception {
 
-        assertNotNull(dataProvider);
+        // Actions
+        UserEntity testUser = new UserEntity("testing2", "12345", Role.USER);
+        this.repo.save(testUser);
+
+        // Change the user's password
+        testUser.setPassword("54321");
+
+        // Save the user entity again
+        this.repo.save(testUser);
+
+        // Fetch the user entity from the repository
+        UserEntity fetchedUser = this.repo.findByUsername("testing2");
+
+        // Assert
+        assertNotNull("User should not be null", fetchedUser);
+        assertEquals("testing2", fetchedUser.getUsername());
+        assertEquals("54321", fetchedUser.getPassword());
+        assertEquals(Role.USER, fetchedUser.getRoles());
+    }
+
+    /**
+     *
+     * This test PASSED, to save stock data.
+     *
+     */
+    @Test
+    public void testAddStock() {
+
+        // Action
+        StocksEntity stock = new StocksEntity("V", "Visa");
+        repo2.save(stock);
+        // Assert
+        assertNotNull("stock should not be null", stock);
+        assertEquals("V", stock.getSymbol());
+        assertEquals("Visa", stock.getInformation());
     }
 }

@@ -6,12 +6,9 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
 import com.vaadin.flow.component.charts.Chart;
 import com.vaadin.flow.component.charts.model.*;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
-import com.vaadin.flow.data.provider.DataProvider;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.LSTM;
@@ -32,18 +29,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class LSTM_Algorithm {
 
     /*
-     * Attributes for the LSTM model using Keras library
+     * Attributes for the LSTM model
      * Represents parameters for the model to function
      * (This can be changed and improved to improve the performance or accuracy of data).
      */
-    private DataSeries series = new DataSeries();
+    private DataSeries actualSeries = new DataSeries();
+    private DataSeries predictedSeries = new DataSeries();
     private int inputSize = 1;
-    private int lstmLayerSize = 10;
+    private int lstmLayerSize = 20;
     private int outputSize = 1;
 
     /**
@@ -53,8 +50,8 @@ public class LSTM_Algorithm {
      * @throws IOException file errors
      * @throws InterruptedException splitting files / converting files
      */
-    public void lstmModel(String fileName, MemoryBuffer memory, Double rate, int epochs, Chart lineChart,
-                          Chart scatterChart, Chart barChart, Grid grid) throws IOException, InterruptedException {
+    public void predictionModel(String fileName, MemoryBuffer memory, Double rate, int epochs, Chart lineChart,
+                                Chart scatterChart, Chart barChart) throws IOException, InterruptedException {
 
         if (memory == null) {
             Notification notification = Notification.show("Buffer is Null");
@@ -98,36 +95,39 @@ public class LSTM_Algorithm {
                 // splitting dataset into training and testing, 80% training and 20% testing
                 int trainingSet = (int) (openValues.size() * 0.8);
                 int testingSet = openValues.size() - trainingSet;
-                double[][] trainOpen = new double[trainingSet][1];
-                double[][] testOpen = new double[testingSet][1];
-
+                double[][] trainData = new double[trainingSet][4];
+                double[][] testData = new double[testingSet][4];
                 for (int i = 0; i < trainingSet; i++) {
-                    trainOpen[i][0] = openValues.get(i);
+                    trainData[i][0] = openValues.get(i);
+                    trainData[i][1] = closeValues.get(i);
+                    trainData[i][2] = highValues.get(i);
+                    trainData[i][3] = lowValues.get(i);
                 }
-
                 for (int i = trainingSet; i < openValues.size(); i++) {
-                    testOpen[i - trainingSet][0] = openValues.get(i);
+                    testData[i - trainingSet][0] = openValues.get(i);
+                    testData[i - trainingSet][1] = closeValues.get(i);
+                    testData[i - trainingSet][2] = highValues.get(i);
+                    testData[i - trainingSet][3] = lowValues.get(i);
                 }
 
                 // Prepare training and testing data
-                INDArray trainOpenArray = Nd4j.create(trainOpen);
-                INDArray testOpenArray = Nd4j.create(testOpen);
+                INDArray trainArray = Nd4j.create(trainData);
+                INDArray testArray = Nd4j.create(testData);
                 // Reshape data to 3D input
-                int examples = trainOpenArray.rows();
+                int examples = trainArray.rows();
                 int sequenceLength = 1;
-                int features = 1;
-                trainOpenArray = trainOpenArray.reshape(examples, sequenceLength, features);
-                testOpenArray = testOpenArray.reshape(testOpenArray.rows(), sequenceLength, features);
-
+                int features = 4;
+                trainArray = trainArray.reshape(examples, sequenceLength, features);
+                testArray = testArray.reshape(testArray.rows(), sequenceLength, features);
                 // Creating dataset objects
-                DataSet trainData = new DataSet(trainOpenArray, trainOpenArray);
-                DataSet testData = new DataSet(testOpenArray, testOpenArray);
+                DataSet trainDataSet = new DataSet(trainArray, trainArray);
+                DataSet testDataSet = new DataSet(testArray, testArray);
 
                 /*
                  * Architecture of the model
                  *
                  * The random number generator's seed is set to 12345 using the command.seed(12345). This is done during
-                 *  the training process. This helps to guarantee that the training process's outcomes can be replicated.
+                 * the training process. This helps to guarantee that the training process's outcomes can be replicated.
                  *
                  * The weight initialization technique is changed to Xavier initialization using the.weightInit(WeightInit
                  * .XAVIER) command. The Xavier initialization technique is a strategy to set up the weights in a neural
@@ -170,35 +170,38 @@ public class LSTM_Algorithm {
                 network.init();
                 network.setListeners(new ScoreIterationListener(1));
 
-                // train the model
+                // train the model, which requires a 3d array.
                 for (int i = 0; i < epochs; i++) {
-                    network.fit(trainData);
+                    network.fit(trainDataSet);
                 }
 
-                // Make predictions with the test data and reshape to 1D array
-                INDArray prediction = network.output(testData.getFeatures());
-                prediction = prediction.reshape(prediction.length());
+                // Create an empty list to hold predicted values
+                List<Double> predictedValues = new ArrayList<>();
 
-                // Convert the predictions to a double array for plotting
-                double[] predictedOpenValues = prediction.toDoubleVector();
-
-                // Create a list to store the data
-                List<Double> predictionDataList = new ArrayList<>();
-
-                /*
-                 *
-                 * Iterate through data and add to data series
-                 * X Axis is time step
-                 * Y Axis is predicted values
-                 *
-                 */
-                for (int i = 0; i < predictedOpenValues.length; i++) {
-                    series.add(new DataSeriesItem(i, predictedOpenValues[i]));
-                    predictionDataList.add(predictedOpenValues[i]);
+                // Loop through each testing data point and predict its value
+                for (int i = 0; i < testingSet; i++) {
+                    INDArray testPoint = Nd4j.create(new double[][]{{testData[i][0], testData[i][1], testData[i][2], testData[i][3]}});
+                    testPoint = testPoint.reshape(1, 1, 4); // Reshape testPoint to a 3D array
+                    INDArray predicted = network.output(testPoint); // Get the predicted output
+                    double[] predictionArray = predicted.ravel().toDoubleVector();
+                    double prediction = predictionArray[0];
+                    predictedSeries.add(new DataSeriesItem(i, prediction));
                 }
 
-//                ListDataProvider<Double> dataProvider = DataProvider.ofCollection(predictionDataList);
-//                grid.setItems((Stream<String[]>) dataProvider);
+                // Add the actual data
+                actualSeries = new DataSeries();
+                for (int i = 0; i < testDataSet.numExamples(); i++) {
+                    double x = i + trainDataSet.numExamples();
+                    double y = testDataSet.getFeatures().getDouble(i);
+                    actualSeries.add(new DataSeriesItem(x, y));
+                }
+
+//                // Print actual vs predicted values
+//                System.out.println("Actual\tPredicted");
+//                for (int i = 0; i < testDataSet.numExamples(); i++) {
+//                    System.out.print(testDataSet.getFeatures().getDouble(i) + "\t");
+//                    System.out.println(predicted.getDouble(i) + "\t");
+//                }
 
             } catch (IOException | ParseException | CsvValidationException e) {
                 e.printStackTrace();
@@ -207,15 +210,16 @@ public class LSTM_Algorithm {
             // Configurations for charts
             Configuration configurationlineChart = lineChart.getConfiguration();
             Configuration configurationscatterChart = scatterChart.getConfiguration();
-            Configuration configurationheatrChart = barChart.getConfiguration();
-
+            Configuration configurationbarChart = barChart.getConfiguration();
 
             // Set name to the dataset selected
-            series.setName(fileName);
+            predictedSeries.setName("Predicted " + fileName);
+            actualSeries.setName("Actual " + fileName);
 
-            configurationlineChart.addSeries(series);
-            configurationscatterChart.addSeries(series);
-            configurationheatrChart.addSeries(series);
+            configurationlineChart.addSeries(predictedSeries);
+            configurationscatterChart.addSeries(predictedSeries);
+            configurationbarChart.addSeries(predictedSeries);
+
         }
     }
 }

@@ -162,10 +162,6 @@ public class ViewStocksView extends VerticalLayout {
                 .stream());
     }
 
-
-
-
-
     /**
      *
      * Exports the grid CSV

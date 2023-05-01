@@ -1,7 +1,6 @@
 package com.example.app.Views.Processing;
 
 import com.example.app.Data.API.StockAPI;
-import com.example.app.Data.Entity.StocksEntity;
 import com.example.app.Data.Machine_Learning.LSTM_Algorithm;
 import com.example.app.Views.MainLayout;
 import com.vaadin.flow.component.button.Button;
@@ -91,12 +90,12 @@ public class ProcessingView extends VerticalLayout {
 
         ratefield.setMin(0.001);
         ratefield.setMax(0.1);
-        ratefield.setValue(0.001);
+        ratefield.setValue(0.1);
         ratefield.setHasControls(true);
 
         epochsfield.setMin(10);
-        epochsfield.setMax(100);
-        epochsfield.setValue(100);
+        epochsfield.setMax(1000);
+        epochsfield.setValue(1000);
         epochsfield.setHasControls(true);
 
 //        XAxis xAxis = new XAxis();
@@ -108,17 +107,18 @@ public class ProcessingView extends VerticalLayout {
         configurationlineChart.setTitle("Line-chart Predictions");
         configurationlineChart.setExporting(true);
         configurationlineChart.getxAxis().setTitle("Time step");
-        configurationlineChart.getyAxis().setTitle("Predicted value");
-
+        configurationlineChart.getyAxis().setTitle("Values");
+        configurationlineChart.setSubTitle("the X axis represents the time steps for each prediction, Y axis represents the prediction output");
         configurationscatterChart.setTitle("Scatter-chart Predictions");
         configurationscatterChart.setExporting(true);
         configurationscatterChart.getxAxis().setTitle("Time step");
-        configurationscatterChart.getyAxis().setTitle("Predicted value");
-
+        configurationscatterChart.getyAxis().setTitle("Values");
+        configurationscatterChart.setSubTitle("the X axis represents the time steps for each prediction, Y axis represents the prediction output");
         configurationbarChart.setTitle("Bar-chart Predictions");
         configurationbarChart.setExporting(true);
         configurationbarChart.getxAxis().setTitle("Time step");
-        configurationbarChart.getyAxis().setTitle("Predicted value");
+        configurationbarChart.getyAxis().setTitle("Values");
+        configurationbarChart.setSubTitle("the X axis represents the time steps for each prediction, Y axis represents the prediction output");
 
         inputlayout.add(ratefield, epochsfield);
         Chartlayout.addAndExpand(lineChart, scatterChart, barChart);
@@ -148,21 +148,26 @@ public class ProcessingView extends VerticalLayout {
 
         processButton.addClickListener(event -> {
             if (file != null) {
-                Notification notification = Notification.show("Processing the Dataset " + file.getName());
-                notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+                if (ratefield.getValue() == null || epochsfield.getValue() == null) {
+                    Notification error = Notification.show("One or more field are empty ");
+                    error.addThemeVariants(NotificationVariant.LUMO_ERROR);
 
-                try {
-                    model.lstmModel(file.getName(), memoryBuffer, ratefield.getValue(), epochsfield.getValue(),
-                                        lineChart, scatterChart, barChart, grid);
-                    file = null;
+                } else {
+                    try {
+                        Notification notification = Notification.show("Processing the Dataset " + file.getName());
+                        notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+                        model.predictionModel(file.getName(), memoryBuffer, ratefield.getValue(), epochsfield.getValue(),
+                                lineChart, scatterChart, barChart);
+                        file = null;
 
-                } catch (IOException e) {
-                    Notification errorFile = Notification.show("IOException Error");
-                    errorFile.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                } catch (InterruptedException e) {
-                    Notification errorFile = Notification.show("InterruptedException Error");
-                    errorFile.addThemeVariants(NotificationVariant.LUMO_ERROR);
-            }
+                    } catch (IOException e) {
+                        Notification errorFile = Notification.show("IOException Error");
+                        errorFile.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    } catch (InterruptedException e) {
+                        Notification errorFile = Notification.show("InterruptedException Error");
+                        errorFile.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    }
+                }
 
             } else {
                 Notification errorFile = Notification.show("Please upload a file");

@@ -90,7 +90,7 @@ public class StockAPI {
          toYear = Calendar.getInstance();
          fromYear.add(Calendar.YEAR, year);
          // get stock
-         stock = YahooFinance.get(option, fromYear, toYear, Interval.WEEKLY);
+         stock = YahooFinance.get(option, fromYear, toYear, Interval.DAILY);
          if (stock != null) {
             Notification message = Notification.show("Successfully, fetched " + option + ", From " + year
                     + " years.");
