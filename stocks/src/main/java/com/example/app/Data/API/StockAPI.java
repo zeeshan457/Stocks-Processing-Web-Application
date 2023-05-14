@@ -1,9 +1,7 @@
 package com.example.app.Data.API;
 
-import com.opencsv.bean.CsvBindByName;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.bean.CsvBindByPosition;
-import com.opencsv.bean.CsvDate;
-import com.opencsv.bean.CsvIgnore;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
@@ -11,12 +9,21 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import yahoofinance.YahooFinance;
-import yahoofinance.histquotes.Interval;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -74,46 +81,60 @@ public class StockAPI {
     * @param grid passing grid, to get current grid
     * @param option passing symbol options, to get current option
     */
-   public void getStockFromAPI(Grid<StockAPI> grid, String option, int year) throws IOException {
+   public void getStockFromAPI(Grid<StockAPI> grid, String option, int year) throws IOException, JSONException {
+
       if (option.equals("null")) {
-        Notification error = Notification.show("Please select a stock from the list");
+         Notification error = Notification.show("Please select a stock from the list");
          error.addThemeVariants(NotificationVariant.LUMO_ERROR);
       } else {
-         yahoofinance.Stock stock;
-         Calendar fromYear;
-         Calendar toYear;
+         String symbol = option.toUpperCase();
          List<StockAPI> dataProvider = new ArrayList<>();
 
-         // start year
-         fromYear = Calendar.getInstance();
-         // Current year
-         toYear = Calendar.getInstance();
-         fromYear.add(Calendar.YEAR, year);
-         // get stock
-         stock = YahooFinance.get(option, fromYear, toYear, Interval.DAILY);
-         if (stock != null) {
-            Notification message = Notification.show("Successfully, fetched " + option + ", From " + year
-                    + " years.");
-            message.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
-
-            // Iterating stock history
-            for (int i = 0; i < stock.getHistory().size(); i++) {
-               // passing i to argument to get all intervals
-               String Data = stock.getHistory().get(i).toString();
-               // Regex to split the list into specific data and assigning them
-               String[] HistoricalData = Data.split("[-(@/,:>]");
-               // Split the list based on these symbols, to separate values, then reconstructing the values.
-               Date = LocalDate.of(Integer.parseInt(HistoricalData[1]), Integer.parseInt(HistoricalData[2]), Integer.parseInt(HistoricalData[3]));
-               Open = Double.valueOf(HistoricalData[6]);
-               Close = Double.valueOf(HistoricalData[8]);
-               High = Double.valueOf(HistoricalData[5]);
-               Low = Double.valueOf(HistoricalData[4]);
-
-               // Getting all the intervals based on the stock selected and positions in the Array.
-               dataProvider.add(new StockAPI(Date, Open, Close, High, Low));
-            }
+         // start year and valid date
+         LocalDate startDate = LocalDate.now().minusYears(Math.abs(year));
+         if (startDate.isAfter(LocalDate.now())) {
+            startDate = LocalDate.now().minusYears(1);
          }
+
+         String url = String.format("https://query1.finance.yahoo.com/v8/finance/chart/%s?interval=1d&period1=%d&period2=%d",
+                 symbol, startDate.atStartOfDay().toEpochSecond(ZoneOffset.UTC), LocalDate.now().atStartOfDay().toEpochSecond(ZoneOffset.UTC));
+         // make the HTTP request
+         URLConnection connection = new URL(url).openConnection();
+         connection.connect();
+         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+         StringBuilder responseBuilder = new StringBuilder();
+         String inputLine;
+         while ((inputLine = in.readLine()) != null) {
+            responseBuilder.append(inputLine);
+         }
+         String responseString = responseBuilder.toString();
+         Map<String, Object> responseMap = new ObjectMapper().readValue(responseString, Map.class);
+
+         // parse the JSON response
+         JSONObject jsonObj = new JSONObject(responseMap);
+         JSONArray resultArr = jsonObj.getJSONObject("chart").getJSONArray("result");
+         JSONObject resultObj = resultArr.getJSONObject(0);
+         JSONArray timestampArr = resultObj.getJSONArray("timestamp");
+         JSONArray openArr = resultObj.getJSONObject("indicators").getJSONArray("quote").getJSONObject(0).getJSONArray("open");
+         JSONArray closeArr = resultObj.getJSONObject("indicators").getJSONArray("quote").getJSONObject(0).getJSONArray("close");
+         JSONArray highArr = resultObj.getJSONObject("indicators").getJSONArray("quote").getJSONObject(0).getJSONArray("high");
+         JSONArray lowArr = resultObj.getJSONObject("indicators").getJSONArray("quote").getJSONObject(0).getJSONArray("low");
+
+         // convert the JSON data to StockAPI objects
+         for (int i = 0; i < timestampArr.length(); i++) {
+            LocalDate date = Instant.ofEpochSecond(timestampArr.getLong(i)).atZone(ZoneOffset.UTC).toLocalDate();
+            Double open = openArr.getDouble(i);
+            Double close = closeArr.getDouble(i);
+            Double high = highArr.getDouble(i);
+            Double low = lowArr.getDouble(i);
+            dataProvider.add(new StockAPI(date, open, close, high, low));
+         }
+
          grid.setItems(dataProvider);
+
+         Notification message = Notification.show(String.format("Successfully, fetched %s, From %d years.", option, year));
+         message.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
       }
    }
 

@@ -30,6 +30,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import org.aspectj.weaver.ast.Not;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -206,9 +207,14 @@ public class ViewStocksView extends VerticalLayout {
                 API.getStockFromAPI(grid, String.valueOf(options.getValue()), yearField.getValue());
 
             } catch (IOException e) {
-                Notification.show("IO Exception, stock not found");
+                e.printStackTrace();
+                Notification.show("IO Exception, check stack trace for errors.");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Notification.show("RuntimeException, check stack trace for errors.");
             }
         });
+
         refreshButton.addClickListener(event -> {
             API.Refresh();
         });

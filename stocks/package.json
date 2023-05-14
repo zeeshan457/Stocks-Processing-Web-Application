@@ -394,14 +394,14 @@
     "@vaadin/vaadin-crud": "$@vaadin/vaadin-crud",
     "@vaadin/vaadin-grid-pro": "$@vaadin/vaadin-grid-pro",
     "@vaadin/vaadin-rich-text-editor": "$@vaadin/vaadin-rich-text-editor",
-    "@fontsource/abel": "$@fontsource/abel",
     "@polymer/polymer": "$@polymer/polymer",
-    "@vaadin-component-factory/vcf-nav": "$@vaadin-component-factory/vcf-nav",
     "@vaadin/common-frontend": "$@vaadin/common-frontend",
     "construct-style-sheets-polyfill": "$construct-style-sheets-polyfill",
     "date-fns": "$date-fns",
-    "line-awesome": "$line-awesome",
     "lit": "$lit",
-    "proj4": "$proj4"
+    "proj4": "$proj4",
+    "@fontsource/abel": "$@fontsource/abel",
+    "line-awesome": "$line-awesome",
+    "@vaadin-component-factory/vcf-nav": "$@vaadin-component-factory/vcf-nav"
   }
 }
