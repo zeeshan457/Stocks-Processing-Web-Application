@@ -1,6 +1,4 @@
 # FINAL YEAR PROJECT 
-## This project was my final year project
-
 Author Zeeshan Mahmood Date 08/10/2022
 
 Key features
