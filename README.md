@@ -1,5 +1,5 @@
 # FINAL YEAR PROJECT 
-## This project was my proposal, and it was accepted by the supervisor.
+## This project was my final year project
 
 Author Zeeshan Mahmood Date 08/10/2022
 
